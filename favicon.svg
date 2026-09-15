@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <!-- Rich Gold Gradients -->
+    <linearGradient id="emblemGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0B3"/>
+      <stop offset="35%" stop-color="#ECC76A"/>
+      <stop offset="70%" stop-color="#C59F48"/>
+      <stop offset="100%" stop-color="#8E6A1E"/>
+    </linearGradient>
+    <linearGradient id="emblemGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E4B37"/>
+      <stop offset="50%" stop-color="#072B1F"/>
+      <stop offset="100%" stop-color="#031912"/>
+    </linearGradient>
+    <linearGradient id="ringGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE7A3"/>
+      <stop offset="50%" stop-color="#C59F48"/>
+      <stop offset="100%" stop-color="#99772A"/>
+    </linearGradient>
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#C59F48" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Sacred Shield Circle -->
+  <circle cx="100" cy="100" r="96" fill="url(#emblemGreen)"/>
+  <circle cx="100" cy="100" r="95" stroke="url(#ringGold)" stroke-width="3"/>
+  <circle cx="100" cy="100" r="88" stroke="url(#ringGold)" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.6"/>
+
+  <!-- Cheondoism Gung-Ul-Jang (궁을장) Yin-Yang Geometry -->
+  <g filter="url(#goldGlow)" transform="translate(100,100)">
+    
+    <!-- Outer boundary ring -->
+    <circle cx="0" cy="0" r="75" stroke="url(#emblemGold)" stroke-width="6.5" fill="none"/>
+
+    <!-- Left Side background (Half Dark) & Right Side (Gold) -->
+    <!-- Clip left half -->
+    <clipPath id="leftHalf">
+      <rect x="-85" y="-85" width="85" height="170"/>
+    </clipPath>
+    <!-- Clip right half -->
+    <clipPath id="rightHalf">
+      <rect x="0" y="-85" width="85" height="170"/>
+    </clipPath>
+
+    <!-- RIGHT HALF BASE (Gold body) -->
+    <path d="M0 -75 A75 75 0 0 1 0 75 Z" fill="url(#emblemGold)"/>
+
+    <!-- LEFT HALF BASE (Dark Green with subtle gold inner) -->
+    <path d="M0 -75 A75 75 0 0 0 0 75 Z" fill="#06271C"/>
+
+    <!-- The S-shaped Gung-Ul Swirl on Left (Gold swirl in Dark side) -->
+    <path d="M0 -68 C-42 -68 -68 -38 -68 0 C-68 38 -42 68 0 68 C-22 52 -36 32 -36 0 C-36 -32 -22 -52 0 -68 Z" fill="url(#emblemGold)"/>
+    
+    <!-- Outer crescent shape on left -->
+    <path d="M0 -68 C-50 -68 -70 -35 -70 0 C-70 35 -50 68 0 68 C-35 55 -52 30 -52 0 C-52 -30 -35 -55 0 -68 Z" fill="#06271C"/>
+
+    <!-- The S-shaped Gung-Ul Swirl on Right (Dark swirl in Gold side) -->
+    <path d="M0 -68 C42 -68 68 -38 68 0 C68 38 42 68 0 68 C22 52 36 32 36 0 C36 -32 22 -52 0 -68 Z" fill="#06271C"/>
+
+    <!-- Outer crescent shape on right -->
+    <path d="M0 -68 C50 -68 70 -35 70 0 C70 35 50 68 0 68 C35 55 52 30 52 0 C52 -30 35 -55 0 -68 Z" fill="url(#emblemGold)"/>
+
+    <!-- Center Vertical Stem connecting Top and Bottom -->
+    <rect x="-3" y="-74" width="6" height="24" fill="url(#emblemGold)"/>
+    <rect x="-3" y="50" width="6" height="24" fill="url(#emblemGold)"/>
+
+    <!-- Center Nucleus Circle with Yin-Yang Inversion -->
+    <circle cx="0" cy="0" r="18" fill="url(#emblemGold)"/>
+    <path d="M0 -18 A18 18 0 0 1 0 18 Z" fill="#06271C"/>
+
+  </g>
+</svg>

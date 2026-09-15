@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 70" fill="none">
+  <defs>
+    <linearGradient id="logoGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE08A"/>
+      <stop offset="50%" stop-color="#C59F48"/>
+      <stop offset="100%" stop-color="#8C6818"/>
+    </linearGradient>
+    <linearGradient id="bgShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E4B37"/>
+      <stop offset="100%" stop-color="#041E15"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Large Cheondoism Emblem on Left (Diameter 60px) -->
+  <g transform="translate(4, 5)">
+    <!-- Outer Shield -->
+    <rect x="0" y="0" width="60" height="60" rx="18" fill="url(#bgShield)" stroke="url(#logoGold)" stroke-width="1.8"/>
+    <rect x="3" y="3" width="54" height="54" rx="15" stroke="url(#logoGold)" stroke-width="0.8" opacity="0.4"/>
+    
+    <!-- Scaled Gungul Emblem inside (center at 30, 30, radius 22) -->
+    <g transform="translate(30, 30) scale(0.3)">
+      <!-- Outer boundary ring -->
+      <circle cx="0" cy="0" r="75" stroke="url(#logoGold)" stroke-width="7" fill="none"/>
+      <!-- Right Half Gold -->
+      <path d="M0 -75 A75 75 0 0 1 0 75 Z" fill="url(#logoGold)"/>
+      <!-- Left Half Dark -->
+      <path d="M0 -75 A75 75 0 0 0 0 75 Z" fill="#041E15"/>
+      <!-- Left Gold Swirl -->
+      <path d="M0 -68 C-42 -68 -68 -38 -68 0 C-68 38 -42 68 0 68 C-22 52 -36 32 -36 0 C-36 -32 -22 -52 0 -68 Z" fill="url(#logoGold)"/>
+      <path d="M0 -68 C-50 -68 -70 -35 -70 0 C-70 35 -50 68 0 68 C-35 55 -52 30 -52 0 C-52 -30 -35 -55 0 -68 Z" fill="#041E15"/>
+      <!-- Right Dark Swirl -->
+      <path d="M0 -68 C42 -68 68 -38 68 0 C68 38 42 68 0 68 C22 52 36 32 36 0 C36 -32 22 -52 0 -68 Z" fill="#041E15"/>
+      <path d="M0 -68 C50 -68 70 -35 70 0 C70 35 50 68 0 68 C35 55 52 30 52 0 C52 -30 35 -55 0 -68 Z" fill="url(#logoGold)"/>
+      <!-- Vertical Stems -->
+      <rect x="-3.5" y="-74" width="7" height="24" fill="url(#logoGold)"/>
+      <rect x="-3.5" y="50" width="7" height="24" fill="url(#logoGold)"/>
+      <!-- Center Inversion -->
+      <circle cx="0" cy="0" r="18" fill="url(#logoGold)"/>
+      <path d="M0 -18 A18 18 0 0 1 0 18 Z" fill="#041E15"/>
+    </g>
+  </g>
+
+  <!-- Typography: '양평 지상락원' (Bigger & Bolder) -->
+  <text x="74" y="34" font-family="'Noto Serif KR', 'Chosunilbo_myungjo', serif" font-weight="900" font-size="24" fill="#0A3D2C" letter-spacing="-0.5">양평 지상락원</text>
+  
+  <!-- Subtitle Badge & Text -->
+  <rect x="74" y="44" width="62" height="16" rx="4" fill="#FFF8E7" stroke="#E8CE88" stroke-width="0.8"/>
+  <text x="78" y="55.5" font-family="'Noto Sans KR', sans-serif" font-weight="800" font-size="9.5" fill="#8C6818">천도교 궁을</text>
+  <text x="142" y="56" font-family="'Noto Sans KR', sans-serif" font-weight="700" font-size="10.5" fill="#4B6156" letter-spacing="-0.2">행복요양원 재생 스마트팜</text>
+</svg>

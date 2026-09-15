@@ -1,0 +1,2441 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <title>하이존가든 미니홈피 엔진 — HIZONE BIO-POD</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#006c49",
+            "on-primary": "#ffffff",
+            "primary-container": "#10b981",
+            "on-primary-container": "#00422b",
+            "primary-fixed": "#6ffbbe",
+            "secondary": "#006c4a",
+            "secondary-container": "#82f5c1",
+            "on-secondary-container": "#00714e",
+            "tertiary": "#006398",
+            "tertiary-container": "#4aaaef",
+            "background": "#f9f9ff",
+            "on-background": "#151c27",
+            "surface": "#f9f9ff",
+            "on-surface": "#151c27",
+            "on-surface-variant": "#3c4a42",
+            "surface-dim": "#d3daea",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f0f3ff",
+            "surface-container": "#e7eefe",
+            "surface-container-high": "#e2e8f8",
+            "surface-container-highest": "#dce2f3",
+            "outline": "#6c7a71",
+            "outline-variant": "#bbcabf",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "inverse-surface": "#2a313d",
+            "inverse-on-surface": "#ebf1ff"
+          },
+          fontFamily: {
+            sans: ["Manrope", "sans-serif"],
+            data: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      min-height: 100dvh;
+      overscroll-behavior-y: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .pt-safe {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-sans flex flex-col min-h-screen select-none antialiased">
+
+  <!-- ================= TOP FLOATING HEADER ================= -->
+  <header class="fixed top-0 w-full z-40 pt-safe bg-surface/90 backdrop-blur-xl border-b border-surface-container shadow-sm">
+    <div class="h-14 px-4 flex items-center justify-between max-w-[500px] mx-auto">
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="window.location.hash='#/portal'">
+        <div class="w-8 h-8 rounded-xl overflow-hidden shadow-sm flex items-center justify-center bg-primary">
+          <svg class="w-6 h-6" viewBox="0 0 100 100" fill="none">
+            <rect width="100" height="100" rx="24" fill="#006c49"/>
+            <path d="M50 20C42 35 30 45 22 55C14 65 18 78 30 80C42 82 48 72 50 65C52 72 58 82 70 80C82 78 86 65 78 55C70 45 58 35 50 20Z" fill="#A7F3D0"/>
+            <path d="M50 35V75" stroke="#065F46" stroke-width="4" stroke-linecap="round"/>
+            <path d="M50 50C42 46 36 48 34 52" stroke="#065F46" stroke-width="3" stroke-linecap="round"/>
+            <path d="M50 60C58 56 64 58 66 62" stroke="#065F46" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[17px] font-bold text-on-surface tracking-tight leading-none">하이존가든</span>
+          <span class="text-[11px] font-semibold text-primary tracking-wide leading-none mt-1">HIZONE BIO-POD</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <!-- Live status indicator badge -->
+        <div class="hidden sm:flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container/60 text-on-secondary-container text-[11px] font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          <span>실시간 동기화</span>
+        </div>
+
+        <!-- Kakao Webhook Logs button -->
+        <button onclick="window.location.hash='#/logs'" class="relative w-9 h-9 flex items-center justify-center rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" title="카카오 알림톡 웹훅 로그 콘솔">
+          <span class="material-symbols-outlined text-[20px]">notifications</span>
+          <span id="alimtalk-badge" class="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#FEE500] text-[#191919] font-data font-bold text-[10px] flex items-center justify-center shadow">3</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= ALIMTALK TOAST NOTIFICATION (POPUP) ================= -->
+  <div id="alimtalk-toast" class="fixed top-16 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none transition-all duration-300 transform translate-y-[-150%] opacity-0">
+    <div class="pointer-events-auto bg-[#FEE500] text-[#191919] rounded-2xl shadow-xl p-3.5 max-w-[400px] w-full border border-amber-300 flex items-start gap-3 animate-bounce-short">
+      <div class="w-9 h-9 rounded-full bg-[#191919] text-[#FEE500] flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">chat</span>
+      </div>
+      <div class="flex flex-col flex-1 min-w-0">
+        <div class="flex items-center justify-between">
+          <span id="alimtalk-title" class="text-[12px] font-bold text-[#191919]/70">💬 [카카오 알림톡]</span>
+          <span id="alimtalk-time" class="text-[10px] text-[#191919]/60 font-data">방금 전</span>
+        </div>
+        <div id="alimtalk-body" class="text-[13px] font-medium mt-0.5 leading-snug">
+          알림톡 발송 완료
+        </div>
+      </div>
+      <button onclick="document.getElementById('alimtalk-toast').classList.add('translate-y-[-150%]', 'opacity-0')" class="text-[#191919]/60 hover:text-[#191919]">
+        <span class="material-symbols-outlined text-[16px]">close</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-1 w-full max-w-[500px] mx-auto px-4 pt-16 pb-24 min-h-screen">
+
+    <!-- ================= VIEW 1: UNIFIED PORTAL FEED (TEMPLATE C) ================= -->
+    <div id="view-portal" class="flex flex-col space-y-4">
+      
+      <!-- Search Bar -->
+      <div class="relative w-full pt-2">
+        <div class="relative flex items-center bg-surface-container-low rounded-xl px-3.5 py-2.5 shadow-sm border border-surface-container focus-within:bg-surface-container-lowest focus-within:border-primary transition-all">
+          <span class="material-symbols-outlined text-outline text-[20px] shrink-0">search</span>
+          <input id="portal-search-input" class="w-full bg-transparent pl-2 pr-2 text-on-surface text-[14px] placeholder:text-outline focus:outline-none" placeholder="테넌트 상호명, 기능성 작물, 공간 검색..." type="search"/>
+          <button onclick="window.resetFilters()" class="p-1 text-outline hover:text-on-surface transition-colors" title="필터 초기화">
+            <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2-Level Multi-Category Filter System -->
+      <div class="flex flex-col space-y-2">
+        <!-- Tier 1: Functional Crops Filter -->
+        <div id="cropFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <button data-crop="all" class="shrink-0 px-3 py-1.5 rounded-full bg-primary text-on-primary text-[13px] font-semibold transition-transform active:scale-95 shadow-sm">
+            전체 작물
+          </button>
+          <button data-crop="새싹삼" class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-[13px] font-semibold transition-transform active:scale-95">
+            🌱 새싹인삼
+          </button>
+          <button data-crop="와사비" class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-[13px] font-semibold transition-transform active:scale-95">
+            🥬 생와사비
+          </button>
+          <button data-crop="허브" class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-[13px] font-semibold transition-transform active:scale-95">
+            🌿 기능성 허브
+          </button>
+          <button data-crop="채소" class="shrink-0 px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-[13px] font-semibold transition-transform active:scale-95">
+            🍅 항산화 채소
+          </button>
+        </div>
+
+        <!-- Tier 2: Space Type Filters -->
+        <div id="spaceFilterContainer" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <button data-space="all" class="shrink-0 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[12px] font-medium">
+            전체 공간
+          </button>
+          <button data-space="카페" class="shrink-0 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[12px] font-medium">
+            ☕ 카페
+          </button>
+          <button data-space="음식점" class="shrink-0 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[12px] font-medium">
+            🍽️ 음식점
+          </button>
+          <button data-space="베란다" class="shrink-0 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[12px] font-medium">
+            🏡 베란다/홈
+          </button>
+          <button data-space="옥상" class="shrink-0 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[12px] font-medium">
+            🏢 옥상/창고 룸파밍
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Summary Metric Ribbon -->
+      <div class="bg-surface-container-low rounded-xl p-3 shadow-sm flex items-center justify-between border border-surface-container">
+        <div class="flex items-center space-x-2">
+          <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+          <span class="text-[12px] font-medium text-outline">실시간 입점 현황</span>
+        </div>
+        <div class="flex items-center space-x-3 text-right">
+          <div class="flex flex-col">
+            <span id="metric-tenants" class="font-data text-[13px] font-bold text-primary leading-none">3</span>
+            <span class="text-[10px] text-on-surface-variant">미니홈피</span>
+          </div>
+          <span class="text-surface-dim">/</span>
+          <div class="flex flex-col">
+            <span id="metric-crops" class="font-data text-[13px] font-bold text-primary leading-none">10</span>
+            <span class="text-[10px] text-on-surface-variant">기능작물</span>
+          </div>
+          <span class="text-surface-dim">/</span>
+          <div class="flex flex-col">
+            <span id="metric-feeds" class="font-data text-[13px] font-bold text-primary leading-none">8</span>
+            <span class="text-[10px] text-on-surface-variant">누적피드</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unified Feed Stream List -->
+      <div id="portal-feed-stream" class="flex flex-col space-y-4">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+    </div>
+
+    <!-- ================= VIEW 2: ONBOARDING & ONE-SHOT ENGINE (TEMPLATE A) ================= -->
+    <div id="view-onboard" class="hidden flex flex-col space-y-4">
+      
+      <!-- AI Helper Banner -->
+      <div class="flex items-start gap-3 p-4 rounded-xl bg-surface-container-low shadow-sm border border-surface-container">
+        <div class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="text-[15px] font-bold text-primary leading-tight">AI 원클릭 미니홈피 생성기</span>
+          <p class="text-[12px] text-on-surface-variant mt-1 leading-relaxed">
+            자연어 한마디나 간편 선택으로 나만의 하이존가든 미니홈피를 AI가 3초 만에 원샷 구축하고 카카오 알림톡으로 발급합니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- AI Prompt Box -->
+      <div class="flex flex-col p-4 rounded-xl bg-surface-container-lowest shadow-sm gap-3 border border-surface-container">
+        <div class="flex items-center justify-between">
+          <label class="text-[15px] font-bold text-on-surface flex items-center gap-1.5" for="ai-story-prompt">
+            <span class="material-symbols-outlined text-primary text-[20px]">psychology</span>
+            공간 &amp; 재배 스토리 입력
+          </label>
+          <span class="text-[11px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">AI 프롬프트</span>
+        </div>
+        
+        <div class="relative w-full">
+          <textarea id="ai-story-prompt" class="w-full bg-surface-container-low text-on-surface placeholder:text-outline text-[14px] rounded-xl p-3 focus:outline-none focus:ring-1 focus:ring-primary resize-none transition-all" rows="3" placeholder="운영하시는 공간과 재배 작물 이야기를 편하게 적어주세요.
+예: '연남동 카페 루프탑에서 하이존 바이오 스마트팟으로 새싹삼을 키우고 있어요.'"></textarea>
+          <button id="prompt-clear-btn" type="button" class="absolute bottom-2.5 right-2.5 text-outline hover:text-on-surface p-1">
+            <span class="material-symbols-outlined text-[16px]">backspace</span>
+          </button>
+        </div>
+
+        <!-- Quick Preset Space Chips -->
+        <div class="flex flex-col gap-1.5">
+          <span class="text-[12px] font-medium text-on-surface-variant">빠른 공간 선택 칩</span>
+          <div id="space-preset-group" class="flex flex-wrap gap-1.5">
+            <button class="chip-item flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-medium hover:bg-primary/10 transition-all active:scale-95" data-preset="카페 유휴공간" type="button">
+              <span>☕</span> <span>카페 유휴공간</span>
+            </button>
+            <button class="chip-item flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-medium hover:bg-primary/10 transition-all active:scale-95" data-preset="로컬 식당" type="button">
+              <span>🍽️</span> <span>로컬 식당</span>
+            </button>
+            <button class="chip-item flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-medium hover:bg-primary/10 transition-all active:scale-95" data-preset="베란다/홈가든" type="button">
+              <span>🌿</span> <span>베란다/홈가든</span>
+            </button>
+            <button class="chip-item flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-medium hover:bg-primary/10 transition-all active:scale-95" data-preset="옥상/창고 룸파밍" type="button">
+              <span>🏢</span> <span>옥상/창고 룸파밍</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Crops Multi-Selection -->
+      <div class="flex flex-col p-4 rounded-xl bg-surface-container-lowest shadow-sm gap-3 border border-surface-container">
+        <div class="flex items-center justify-between">
+          <h3 class="text-[15px] font-bold text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-[20px]">potted_plant</span>
+            재배 기능성 작물
+          </h3>
+          <span class="text-[11px] text-outline font-medium">복수 선택 가능</span>
+        </div>
+        <div id="crop-checkbox-group" class="grid grid-cols-2 gap-2">
+          <label class="crop-card flex items-center gap-2.5 p-3 rounded-xl bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container">
+            <input type="checkbox" checked class="crop-checkbox w-4 h-4 accent-primary rounded shrink-0"/>
+            <div class="flex flex-col min-w-0">
+              <span class="text-[13px] font-semibold text-on-surface truncate">기능성 새싹인삼</span>
+              <span class="text-[11px] text-primary font-medium">HIZONE 특화</span>
+            </div>
+          </label>
+          <label class="crop-card flex items-center gap-2.5 p-3 rounded-xl bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container">
+            <input type="checkbox" checked class="crop-checkbox w-4 h-4 accent-primary rounded shrink-0"/>
+            <div class="flex flex-col min-w-0">
+              <span class="text-[13px] font-semibold text-on-surface truncate">유기농 고추냉이</span>
+              <span class="text-[11px] text-on-surface-variant">정밀 수경재배</span>
+            </div>
+          </label>
+          <label class="crop-card flex items-center gap-2.5 p-3 rounded-xl bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container">
+            <input type="checkbox" class="crop-checkbox w-4 h-4 accent-primary rounded shrink-0"/>
+            <div class="flex flex-col min-w-0">
+              <span class="text-[13px] font-semibold text-on-surface truncate">기능성 허브 &amp; 바질</span>
+              <span class="text-[11px] text-on-surface-variant">에센셜 향기군</span>
+            </div>
+          </label>
+          <label class="crop-card flex items-center gap-2.5 p-3 rounded-xl bg-surface-container-low cursor-pointer transition-all hover:bg-surface-container">
+            <input type="checkbox" class="crop-checkbox w-4 h-4 accent-primary rounded shrink-0"/>
+            <div class="flex flex-col min-w-0">
+              <span class="text-[13px] font-semibold text-on-surface truncate">고농축 항산화 채소</span>
+              <span class="text-[11px] text-on-surface-variant">파이토케미컬</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Theme Preset Selector -->
+      <div class="flex flex-col p-4 rounded-xl bg-surface-container-lowest shadow-sm gap-3 border border-surface-container">
+        <div class="flex items-center justify-between">
+          <h3 class="text-[15px] font-bold text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-[20px]">palette</span>
+            템플릿 테마 프리셋
+          </h3>
+          <span id="selected-theme-label" class="text-[12px] text-primary font-bold">네이처 에코 그린</span>
+        </div>
+        <div id="theme-selector-group" class="grid grid-cols-3 gap-2">
+          <!-- Green -->
+          <button data-theme-id="green" data-theme-name="네이처 에코 그린" class="theme-card ring-2 ring-primary flex flex-col items-center p-2 rounded-xl bg-surface-container transition-all text-center relative" type="button">
+            <div class="w-full h-10 rounded-lg bg-emerald-600 flex items-center justify-center text-white mb-1.5 shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">forest</span>
+            </div>
+            <span class="text-[12px] font-bold text-on-surface">에코 그린</span>
+            <span class="theme-badge absolute top-1 right-1 w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">✓</span>
+          </button>
+          <!-- Wood -->
+          <button data-theme-id="wood" data-theme-name="모던 어반 우드" class="theme-card flex flex-col items-center p-2 rounded-xl bg-surface-container-low transition-all text-center relative hover:bg-surface-container" type="button">
+            <div class="w-full h-10 rounded-lg bg-amber-800 flex items-center justify-center text-white mb-1.5 shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">park</span>
+            </div>
+            <span class="text-[12px] font-semibold text-on-surface-variant">어반 우드</span>
+            <span class="theme-badge hidden absolute top-1 right-1 w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">✓</span>
+          </button>
+          <!-- White / Minimal -->
+          <button data-theme-id="white" data-theme-name="클린 미니멀 화이트" class="theme-card flex flex-col items-center p-2 rounded-xl bg-surface-container-low transition-all text-center relative hover:bg-surface-container" type="button">
+            <div class="w-full h-10 rounded-lg bg-slate-700 flex items-center justify-center text-white mb-1.5 shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">domain</span>
+            </div>
+            <span class="text-[12px] font-semibold text-on-surface-variant">미니멀</span>
+            <span class="theme-badge hidden absolute top-1 right-1 w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Layout Variant Selection (A / B / C) -->
+      <div class="flex flex-col p-4 rounded-xl bg-surface-container-lowest shadow-sm gap-3 border border-surface-container">
+        <div class="flex items-center justify-between">
+          <h3 class="text-[15px] font-bold text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-[20px]">view_quilt</span>
+            고정 레이아웃 A/B/C 선택
+          </h3>
+          <span class="text-[11px] text-outline font-medium">순서 배치만 전환</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <button data-layout-id="A" class="onboard-layout-card ring-2 ring-primary flex flex-col p-2.5 rounded-xl bg-surface-container text-left relative" type="button">
+            <span class="text-[12px] font-bold text-on-surface">A안: 표준 스택</span>
+            <span class="text-[10px] text-outline mt-0.5">프로필→미디어→상품</span>
+            <span class="layout-badge absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-primary text-white flex items-center justify-center text-[9px]">✓</span>
+          </button>
+          <button data-layout-id="B" class="onboard-layout-card flex flex-col p-2.5 rounded-xl bg-surface-container-low text-left relative hover:bg-surface-container" type="button">
+            <span class="text-[12px] font-bold text-on-surface">B안: 분할형</span>
+            <span class="text-[10px] text-outline mt-0.5">프로필/카톡 분할</span>
+            <span class="layout-badge hidden absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-primary text-white flex items-center justify-center text-[9px]">✓</span>
+          </button>
+          <button data-layout-id="C" class="onboard-layout-card flex flex-col p-2.5 rounded-xl bg-surface-container-low text-left relative hover:bg-surface-container" type="button">
+            <span class="text-[12px] font-bold text-on-surface">C안: 미디어 히어로</span>
+            <span class="text-[10px] text-outline mt-0.5">영상/사진 최상단</span>
+            <span class="layout-badge hidden absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-primary text-white flex items-center justify-center text-[9px]">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Kakao Notification Setting -->
+      <div class="flex flex-col p-4 rounded-xl bg-surface-container-lowest shadow-sm gap-3 border border-surface-container">
+        <div class="flex items-center justify-between">
+          <h3 class="text-[15px] font-bold text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[#191919] text-[20px]">chat</span>
+            카카오 알림톡 실시간 연동
+          </h3>
+          <span class="text-[11px] font-bold bg-[#FEE500] text-[#191919] px-2 py-0.5 rounded-full">실시간 발송</span>
+        </div>
+        <div class="relative w-full">
+          <input id="kakao-phone-input" class="w-full h-11 bg-surface-container-low text-on-surface font-data text-[13px] rounded-xl px-3.5 focus:outline-none border border-surface-container focus:border-primary" placeholder="010-XXXX-XXXX (알림톡 수신용)" type="tel" value="010-7788-9900"/>
+        </div>
+        <label class="flex items-start gap-2 pt-1 cursor-pointer select-none">
+          <input checked type="checkbox" class="w-4 h-4 mt-0.5 accent-primary rounded shrink-0"/>
+          <span class="text-[12px] text-on-surface-variant leading-snug">
+            홈피 개설 즉시 모바일 카카오 알림톡으로 고유 URL이 발급되며, 신규 주문/댓글 발생 시 실시간 통보됩니다.
+          </span>
+        </label>
+      </div>
+
+      <!-- CTA Action Button -->
+      <div class="pt-2 pb-4">
+        <button id="create-hompy-btn" type="button" class="w-full h-13 py-3.5 bg-primary hover:bg-secondary active:scale-[0.99] text-white font-bold text-[15px] rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all">
+          <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+          <span>AI 원클릭 미니홈피 3초 만에 생성하기</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 3: DYNAMIC MINI-HOMEPAGE (TEMPLATE B) ================= -->
+    <div id="view-hompy" class="hidden flex flex-col space-y-4">
+      
+      <!-- Top Tenant Selector & Layout Switcher Ribbon -->
+      <div class="flex items-center justify-between bg-surface-container-low p-2.5 rounded-xl border border-surface-container">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="material-symbols-outlined text-primary text-[20px] shrink-0">store</span>
+          <select id="tenant-switcher-dropdown" class="bg-surface-container-lowest text-on-surface font-semibold text-[13px] py-1 px-2.5 rounded-lg border border-surface-container focus:outline-none truncate">
+            <!-- Dynamically filled -->
+          </select>
+        </div>
+        
+        <div class="flex items-center gap-1 shrink-0 ml-2">
+          <span class="text-[11px] text-outline font-medium">레이아웃:</span>
+          <button data-variant="A" class="layout-switch-btn px-2 py-0.5 rounded text-[11px] font-bold bg-primary text-on-primary">A</button>
+          <button data-variant="B" class="layout-switch-btn px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container text-on-surface-variant">B</button>
+          <button data-variant="C" class="layout-switch-btn px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container text-on-surface-variant">C</button>
+        </div>
+      </div>
+
+      <!-- Master Template Dynamic Container (5 Fixed Sections) -->
+      <div id="hompy-layout-shell" class="flex flex-col gap-4">
+
+        <!-- 1. [프로필 / 소개 영역] -->
+        <section id="sec-profile" class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-surface-container transition-all">
+          <!-- Banner -->
+          <div class="relative w-full aspect-video bg-surface-container overflow-hidden">
+            <img id="hompy-banner" class="w-full h-full object-cover" src="" alt="Banner">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary/90 text-white text-[11px] font-bold backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse"></span>
+                하이존바이오 인증 파트너
+              </span>
+              <span id="hompy-location" class="text-[11px] text-white/90 drop-shadow flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-[13px]">location_on</span>
+                서울
+              </span>
+            </div>
+          </div>
+
+          <!-- Avatar & Info -->
+          <div class="px-4 pb-4 pt-3 flex flex-col">
+            <div class="flex items-end justify-between -mt-9 mb-2">
+              <div class="relative w-16 h-16 rounded-full ring-3 ring-white shadow-md overflow-hidden bg-surface-container shrink-0">
+                <img id="hompy-avatar" class="w-full h-full object-cover" src="" alt="Avatar">
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="window.openKakaoChat(document.getElementById('hompy-name').textContent)" class="px-3 py-1.5 rounded-full bg-[#FEE500] text-[#191919] font-bold text-[12px] flex items-center gap-1 shadow-sm active:scale-95 transition-transform">
+                  <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">chat</span>
+                  <span>1:1 상담</span>
+                </button>
+                <button onclick="navigator.clipboard.writeText(window.location.href); alert('미니홈피 링크가 복사되었습니다!');" class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high transition-colors" title="공유하기">
+                  <span class="material-symbols-outlined text-[16px]">share</span>
+                </button>
+              </div>
+            </div>
+
+            <h2 id="hompy-name" class="text-[18px] font-bold text-on-surface leading-snug"></h2>
+            <p id="hompy-intro" class="text-[13px] text-on-surface-variant mt-1.5 leading-relaxed bg-surface-container-low p-3 rounded-xl border border-surface-container"></p>
+            
+            <div id="hompy-tags" class="flex flex-wrap items-center gap-1.5 mt-2.5"></div>
+          </div>
+        </section>
+
+        <!-- 2. [홍보 미디어 영역] -->
+        <section id="sec-promo" class="flex flex-col bg-surface-container-lowest p-4 rounded-xl shadow-sm gap-3 border border-surface-container transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-primary text-[20px]">smart_display</span>
+              <h3 class="text-[15px] font-bold text-on-surface">홍보 미디어 갤러리</h3>
+            </div>
+            <span class="text-[11px] font-medium text-primary">실시간 수경재배 현장</span>
+          </div>
+
+          <!-- Segmented Tab Bar -->
+          <div class="grid grid-cols-2 p-1 bg-surface-container rounded-xl">
+            <button id="media-tab-photos" class="py-1.5 rounded-lg text-[13px] font-bold bg-surface-container-lowest text-primary shadow-sm text-center transition-all" type="button">
+              사진 갤러리
+            </button>
+            <button id="media-tab-videos" class="py-1.5 rounded-lg text-[13px] font-medium text-on-surface-variant text-center transition-all" type="button">
+              유튜브/쇼츠 영상
+            </button>
+          </div>
+
+          <!-- Photos Grid -->
+          <div id="media-photos-grid" class="flex flex-col gap-2.5">
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-surface-container">
+              <img id="hompy-media-main" class="w-full h-full object-cover" src="" alt="Media Main">
+              <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 text-white text-[10px] backdrop-blur-sm">LIVE FEED</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="relative aspect-square rounded-xl overflow-hidden bg-surface-container">
+                <img id="hompy-media-slot2" class="w-full h-full object-cover" src="" alt="Slot 2">
+              </div>
+              <div class="relative aspect-square rounded-xl overflow-hidden bg-surface-container">
+                <img id="hompy-media-slot3" class="w-full h-full object-cover" src="" alt="Slot 3">
+              </div>
+            </div>
+          </div>
+
+          <!-- Videos Grid (Simulated player) -->
+          <div id="media-videos-grid" class="hidden flex flex-col gap-2">
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black flex items-center justify-center group cursor-pointer" onclick="alert('유튜브 재생 프레임 시뮬레이터: 하이존바이오 스마트팟 생육 쇼츠 영상이 스트리밍됩니다.')">
+              <img class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoCcQcf4SleMGa51U7S1bQVwH6noFhJZYjICLPV9So2ClfBhqpL2HSctlY7mtwC8kZQXOhpwPDptsFZ1bik_QdNipIDhmtDNiiLCe95UGWGYyU94i3z6EyX-CMTGlnSfCEH9oDmF1dtgTXCtaF_AA91ukrSmx6KmwJLOHJuPCJY4imA8JaDIfjVFTxWgJsc_uy67KjDZbG0Vt9_KHNFF1rOuAZybgSd3rknsovOr1mNJ0O3Nc7Z64" alt="Video cover">
+              <div class="absolute w-12 h-12 rounded-full bg-error text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[28px]">play_arrow</span>
+              </div>
+              <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[11px] font-data">0:45 쇼츠</span>
+            </div>
+            <p class="text-[12px] text-on-surface-variant text-center">터치 시 스마트팟 수확 쇼츠 영상을 확인하실 수 있습니다.</p>
+          </div>
+        </section>
+
+        <!-- 3. [하이존바이오 기능성 작물 상품 피드] -->
+        <section id="sec-products" class="flex flex-col gap-2.5 transition-all">
+          <div class="flex items-center justify-between px-1">
+            <div class="flex flex-col">
+              <h3 class="text-[15px] font-bold text-on-surface">🌿 하이존바이오 인증 재배 상품</h3>
+              <span class="text-[11px] text-on-surface-variant">공간에서 직접 수확되는 초신선 기능성 작물</span>
+            </div>
+          </div>
+          <div id="hompy-products-grid" class="grid grid-cols-2 gap-2.5">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <section id="sec-kakao" class="flex flex-col bg-[#FEE500] text-[#191919] p-4 rounded-2xl shadow-md transition-transform active:scale-[0.99] cursor-pointer border border-amber-300" onclick="window.openKakaoChat(document.getElementById('hompy-name').textContent)">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-[#191919] text-[#FEE500] flex items-center justify-center shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">chat</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[11px] text-[#191919]/75 font-semibold leading-none">실시간 1:1 테넌트 소통창구</span>
+                <h4 class="text-[14px] text-[#191919] font-bold mt-1 leading-tight">
+                  💬 카카오톡 채널 1:1 실시간 상담
+                </h4>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-[#191919] text-[20px] shrink-0">arrow_forward</span>
+          </div>
+          <div class="mt-2.5 pt-2 border-t border-[#191919]/10 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px] text-[#191919]/80 shrink-0">notifications_active</span>
+            <span class="text-[11px] text-[#191919]/90 font-medium">
+              문의/주문 시 사장님 카카오 알림톡으로 실시간 연동
+            </span>
+          </div>
+        </section>
+
+        <!-- 5. [댓글 / 방명록 영역] -->
+        <section id="sec-guestbook" class="flex flex-col bg-surface-container-lowest p-4 rounded-xl shadow-sm gap-3 border border-surface-container transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-primary text-[20px]">history_edu</span>
+              <h3 class="text-[15px] font-bold text-on-surface">📝 방문자 방명록 &amp; 응원 (<span id="hompy-guestbook-count">0</span>)</h3>
+            </div>
+            <span class="text-[11px] text-primary font-semibold">실시간 동기화</span>
+          </div>
+
+          <!-- Input Form -->
+          <form id="guestbook-form" class="flex flex-col gap-2 bg-surface-container-low p-3 rounded-xl border border-surface-container">
+            <div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+              <span>응원 메시지나 구매 문의를 남겨주세요</span>
+              <span id="char-counter" class="font-data">0 / 120자</span>
+            </div>
+            <textarea id="guestbook-input" class="w-full bg-surface-container-lowest text-on-surface p-2.5 rounded-lg text-[13px] focus:outline-none border border-surface-container focus:border-primary resize-none" rows="2" placeholder="따뜻한 응원이나 재배 문의를 남겨주세요..."></textarea>
+            <div class="flex items-center justify-between pt-1">
+              <div class="flex items-center gap-1 text-[11px] text-outline">
+                <span class="material-symbols-outlined text-[14px] text-primary">verified_user</span>
+                <span>클린 봇 필터 적용 중</span>
+              </div>
+              <button type="submit" class="px-3.5 py-1.5 bg-primary text-white rounded-lg text-[12px] font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-transform">
+                <span class="material-symbols-outlined text-[14px]">send</span>
+                <span>등록</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- List -->
+          <div id="hompy-guestbook-list" class="flex flex-col gap-2 pt-1">
+            <!-- Populated dynamically -->
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ================= VIEW 4: WEBHOOK & ADMIN CONSOLE ================= -->
+    <div id="view-logs" class="hidden flex flex-col space-y-4">
+      <div class="flex items-center justify-between bg-surface-container-low p-3 rounded-xl border border-surface-container">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-[#FEE500] text-[#191919] flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">chat</span>
+          </div>
+          <div>
+            <h3 class="text-[14px] font-bold text-on-surface">카카오 알림톡 웹훅 로그</h3>
+            <p class="text-[11px] text-on-surface-variant">1단계 통합 아키텍처 4부 웹훅 명세 검증</p>
+          </div>
+        </div>
+        <button onclick="if(confirm('데이터를 초기 상태로 리셋하시겠습니까?')){window.HizoneDB.reset(); location.reload();}" class="px-2.5 py-1 text-[11px] font-semibold text-error bg-error/10 rounded-lg hover:bg-error/20">
+          초기화
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2 text-[12px] text-on-surface-variant bg-surface-container-lowest p-3 rounded-xl border border-surface-container">
+        <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+        <span>순서 보장: <strong>DB Insert Commit 성공 → Webhook 발송 (최대 3회 재시도)</strong></span>
+      </div>
+
+      <div id="webhook-logs-list" class="flex flex-col space-y-3">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= FIXED BOTTOM NAVIGATION BAR ================= -->
+  <nav class="fixed bottom-0 w-full z-40 pb-safe bg-surface/95 backdrop-blur-xl border-t border-surface-container shadow-lg">
+    <div class="flex justify-around items-center h-16 max-w-[500px] mx-auto px-2">
+      <button data-path="portal-feed" class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-primary font-bold transition-colors">
+        <span class="material-symbols-outlined text-[24px]">explore</span>
+        <span class="text-[11px]">포털 피드</span>
+      </button>
+      <button data-path="onboarding-and-creation" class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[24px]">auto_awesome</span>
+        <span class="text-[11px]">개설/관리</span>
+      </button>
+      <button data-path="tenant-master-minihompy" class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[24px]">storefront</span>
+        <span class="text-[11px]">내 미니홈피</span>
+      </button>
+      <button data-path="kakao-logs" class="flex flex-col items-center justify-center gap-1 w-16 h-12 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-[24px]">notifications_active</span>
+        <span class="text-[11px]">알림톡/로그</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= MODAL 1: AI GENERATION PIPELINE ================= -->
+  <div id="generation-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container-lowest rounded-2xl shadow-2xl p-6 max-w-[360px] w-full flex flex-col items-center text-center gap-4 animate-scale-up">
+      <div class="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+        <span class="material-symbols-outlined text-[32px] animate-spin">sync</span>
+      </div>
+      <div>
+        <h3 class="text-[17px] font-bold text-on-surface">AI 원클릭 미니홈피 구축 중</h3>
+        <p class="text-[12px] text-on-surface-variant mt-1">1단계 One-Shot Generation 파이프라인 가동</p>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="w-full bg-surface-container rounded-full h-2 overflow-hidden">
+        <div id="gen-progress-fill" class="bg-primary h-full transition-all duration-300 w-[20%]"></div>
+      </div>
+
+      <!-- Steps -->
+      <div class="w-full flex flex-col gap-2 text-left text-[12px]">
+        <div id="gen-step-1" class="flex items-center gap-2 text-on-surface opacity-50">
+          <span class="material-symbols-outlined text-outline text-[18px]">hourglass_empty</span>
+          <span>공간 &amp; 작물 의도 분석 및 매핑</span>
+        </div>
+        <div id="gen-step-2" class="flex items-center gap-2 text-on-surface opacity-50">
+          <span class="material-symbols-outlined text-outline text-[18px]">hourglass_empty</span>
+          <span>테마 팔레트 &amp; 레이아웃 검증</span>
+        </div>
+        <div id="gen-step-3" class="flex items-center gap-2 text-on-surface opacity-50">
+          <span class="material-symbols-outlined text-outline text-[18px]">hourglass_empty</span>
+          <span>고유 슬러그 할당 및 테넌트 활성화</span>
+        </div>
+        <div id="gen-step-4" class="flex items-center gap-2 text-on-surface opacity-50">
+          <span class="material-symbols-outlined text-outline text-[18px]">hourglass_empty</span>
+          <span>카카오 알림톡 웹훅 발송 (generation_complete)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: PRODUCT ORDER ================= -->
+  <div id="order-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container-lowest rounded-2xl shadow-2xl p-5 max-w-[380px] w-full flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b border-surface-container pb-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">shopping_bag</span>
+          <h3 class="text-[15px] font-bold text-on-surface">작물 당일수확 구매 / 예약</h3>
+        </div>
+        <button onclick="window.closeOrderModal()" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <div class="bg-surface-container-low p-3 rounded-xl border border-surface-container flex flex-col">
+        <span id="order-modal-title" class="text-[14px] font-bold text-on-surface"></span>
+        <span id="order-modal-price" class="text-[16px] font-data font-bold text-primary mt-1"></span>
+        <span class="text-[11px] text-outline mt-0.5">무농약 친환경 바이오 스마트팟 수경재배 작물</span>
+      </div>
+
+      <form onsubmit="window.submitOrder(event)" class="flex flex-col gap-3">
+        <input type="hidden" id="order-tenant-id"/>
+        <input type="hidden" id="order-product-name"/>
+        <div>
+          <label class="text-[12px] font-medium text-on-surface-variant">주문자 성함</label>
+          <input id="order-buyer-name" required class="w-full mt-1 bg-surface-container-low text-on-surface p-2.5 rounded-xl text-[13px] border border-surface-container focus:outline-none focus:border-primary" placeholder="홍길동"/>
+        </div>
+        <div>
+          <label class="text-[12px] font-medium text-on-surface-variant">연락처 (알림톡 수신)</label>
+          <input id="order-buyer-phone" required class="w-full mt-1 bg-surface-container-low text-on-surface font-data p-2.5 rounded-xl text-[13px] border border-surface-container focus:outline-none focus:border-primary" placeholder="010-1234-5678"/>
+        </div>
+        <button type="submit" class="w-full py-3 bg-primary text-white font-bold rounded-xl text-[14px] shadow-sm active:scale-95 transition-transform flex items-center justify-center gap-1 mt-1">
+          <span>주문 접수 및 사장님 알림톡 발송</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 3: KAKAO TALK 1:1 CHAT SIMULATOR ================= -->
+  <div id="kakao-chat-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-[#b2c7da] rounded-2xl shadow-2xl overflow-hidden max-w-[360px] w-full flex flex-col h-[520px]">
+      <!-- Chat Header -->
+      <div class="bg-[#a0b4c5] p-3.5 flex items-center justify-between text-[#191919]">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-[12px] font-bold">
+            팜
+          </div>
+          <div class="flex flex-col">
+            <span id="chat-tenant-name" class="text-[13px] font-bold leading-tight">사장님</span>
+            <span class="text-[10px] text-black/60 font-medium">1:1 상담톡 연결됨</span>
+          </div>
+        </div>
+        <button onclick="window.closeKakaoChat()" class="text-[#191919] hover:opacity-75">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Chat Stream -->
+      <div class="flex-1 p-3 overflow-y-auto flex flex-col gap-2.5 text-[12px]">
+        <div class="text-center text-[10px] text-black/50 py-1">오늘</div>
+        <div class="flex items-start gap-2">
+          <div class="w-7 h-7 rounded-full bg-primary text-white text-[10px] flex items-center justify-center shrink-0">
+            H
+          </div>
+          <div class="bg-white text-[#191919] p-2.5 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] leading-relaxed">
+            안녕하세요! 하이존바이오 스마트팟에서 직접 기능성 작물을 키우는 공간입니다. 작물 상태나 예약 문의 등 무엇이든 편하게 물어보세요 🌱
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input -->
+      <div class="bg-white p-2 flex items-center gap-2 border-t border-black/10">
+        <input class="flex-1 bg-transparent text-[13px] text-[#191919] px-2 py-1 focus:outline-none" placeholder="메시지를 입력하세요..."/>
+        <button onclick="alert('메시지가 전송되었습니다. 사장님 카카오 알림톡으로 알림이 전송됩니다.'); window.closeKakaoChat();" class="w-8 h-8 rounded-full bg-[#FEE500] text-[#191919] flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+/**
+ * 하이존가든 미니홈피 엔진 — Data Repository & Mock Database (LocalStorage Synced)
+ * 준수 규격: 1단계 통합 아키텍처 가이드 2부 (ERD & 스키마 원칙)
+ */
+
+const STORAGE_KEY = 'HIZONE_GARDEN_DB_V1';
+
+const DEFAULT_DB = {
+  USERS: [
+    {
+      id: 'usr-001',
+      phone: '010-3849-2910',
+      kakao_uid: 'kakao_usr_yeonnam',
+      role: 'owner',
+      created_at: '2026-02-01T08:00:00Z'
+    },
+    {
+      id: 'usr-002',
+      phone: '010-5512-8834',
+      kakao_uid: 'kakao_usr_seongsu',
+      role: 'owner',
+      created_at: '2026-02-05T09:30:00Z'
+    },
+    {
+      id: 'usr-003',
+      phone: '010-9941-4472',
+      kakao_uid: 'kakao_usr_pangyo',
+      role: 'owner',
+      created_at: '2026-02-10T11:20:00Z'
+    },
+    {
+      id: 'usr-admin',
+      phone: '010-8888-9999',
+      kakao_uid: 'kakao_admin_hizone',
+      role: 'admin',
+      created_at: '2026-01-01T00:00:00Z'
+    }
+  ],
+
+  CATEGORIES: [
+    {
+      id: 'cat-bio',
+      code: '하이존바이오_기능성작물',
+      label: '하이존바이오 기능성 작물 재배',
+      is_active: true,
+      sort_order: 1
+    }
+  ],
+
+  CATEGORY_TAGS: [
+    { id: 'tag-crop-1', category_id: 'cat-bio', tag_type: 'crop_type', tag_value: '새싹삼' },
+    { id: 'tag-crop-2', category_id: 'cat-bio', tag_type: 'crop_type', tag_value: '와사비/특수채소' },
+    { id: 'tag-crop-3', category_id: 'cat-bio', tag_type: 'crop_type', tag_value: '기능성 허브' },
+    { id: 'tag-crop-4', category_id: 'cat-bio', tag_type: 'crop_type', tag_value: '바이오 방울토마토' },
+    { id: 'tag-space-1', category_id: 'cat-bio', tag_type: 'space_type', tag_value: '카페' },
+    { id: 'tag-space-2', category_id: 'cat-bio', tag_type: 'space_type', tag_value: '음식점' },
+    { id: 'tag-space-3', category_id: 'cat-bio', tag_type: 'space_type', tag_value: '베란다/홈' },
+    { id: 'tag-space-4', category_id: 'cat-bio', tag_type: 'space_type', tag_value: '옥상/창고' }
+  ],
+
+  TENANTS: [
+    {
+      id: 'tnt-yeonnam',
+      user_id: 'usr-001',
+      slug: 'yeonnam-greenery',
+      name: '연남동 그리너리 카페 & 옥상정원',
+      space_type: '카페',
+      intro_text: '도심 속 유휴 루프탑 공간에서 하이존바이오 순환농법으로 무농약 기능성 새싹삼과 유기농 허브를 정성껏 키우는 에코 큐레이션 라운지입니다.',
+      theme_palette_id: 'green',
+      layout_variant: 'A',
+      location: '서울 마포구 연남로 48',
+      tags: ['#도심스마트팜', '#새싹삼라떼', '#바이오포드', '#연남동카페'],
+      hero_media: {
+        banner: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfw59k7D4n6TNL6YZ3skBrBG_i5dYRcCjU7Dimyn28A6Od4OHVqC8yiQsIJ8Zy30wi-sBs4cSD5hUJC4zXdqn4Z2Ee1iqYM1JVLyGvCUNW_cmoKuPMiJlEhGIvhjy6QJ9NN8zbLk-0w90GBorGh-ymBksOxtM491x1Oy_D-zDp2WMrqRJyShvvfESYtj7xsdEL67YSrWauK2HXqsIPT_Uq57Z1R_4dS1xFStopogSj_H9QFzOo9Kc',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBER3Abra6Eqx9rY-QqUr-_eBcEXlHOLwpe-KKj16cP7oYodPc-V3Migl3zaadUfL7GEnOKhnUed7LDYT-9kkQC5LN2q3NoGzp5WQ5fgmbW2pnSZsJv6YTTjiWaRVYEmFOodBYAXYs4byJKZUjyKXRLsJmi0Na-MEnXt02vInMHepifxVdQhyjDmA_RLSn88tjulOXkgQw4VqwCpjiF_18IjbZU-qbiN5Rk1w5iUrH_WJAdpMY6kko',
+        video_thumb: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD5DTdFhgH5A5UpyEwLbNwFslXjBPYUBZyf3XnGssYc2PF_HIVWG0xjvL3_H4sawYt4fA8tNTpYS7mHuq__bCo6x-IJivz23-uGb_R31LGg41naxWJzoMgG3o_Q42Wi-rW6_iTr0nSzjURiDgis13ybHr8Hi-FiYwUdVdd0dqjdtAcmv9LmR-raMIFxtVJDpwlMFJzFINN0EKbR5WBDpVx2ebbiR6B18o1OcqzG9QG7OyilX4I1uqw',
+        photo_1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB5UJL9OWfs7Juq3-3PpgZBpjytXm7jF4P9JP1B-yjTl7Dyva7GgveX-Q608A9L3oWXcVOMmCONwYamRWtk2f5LScRuLXQGVwiFabx_NpS2RtxSx6TcTa9IVrUisvCFUS91DQcjoiGebR9X5WZ6GkpYrqWO7UxEGDGpQ6TzDC3C1tGFpF2G33FIRIp4Gf8rr-PBQb_A6adsXhv9eYAzQ_SvCGg0MZ7k59f7kXPW5F172VWjlBFCLHQ',
+        photo_2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBV1F8siaS_8fe3zrsCmIwf1__t-uo9NitBWEThDLirSr5ycq4TMqGpqVVKXwp7OaYf-9O8iLZtFYEO1ATOjT2iiKycUJRoGtxlcHw3NSrCdennY40bT0jb63ZZTGNlSlKik89QfX1dBUQTQ-qZfJFaDDDEJ_LVfFTn-ozpG6Nq6g-cGVeOW3FIuwtUuwPFKgSShAF6KzB8yIiaaVrEJZWpW79TGfXkRX0O3ugo2GnkCMaAHnslM6U'
+      },
+      kakao_channel_url: 'https://pf.kakao.com/_hizone_yeonnam',
+      status: 'active',
+      created_at: '2026-02-20T10:00:00Z'
+    },
+    {
+      id: 'tnt-seongsu',
+      user_id: 'usr-002',
+      slug: 'seongsu-greenroof',
+      name: '성수동 그린루프 복합문화카페',
+      space_type: '카페',
+      intro_text: '오늘 아침 수확한 하이존 기능성 새싹인삼으로 만든 시그니처 사포닌 라떼와 싱그러운 수경 허브를 성수점에서 직접 맛보세요.',
+      theme_palette_id: 'amber',
+      layout_variant: 'C',
+      location: '서울 성동구 연무장길 32',
+      tags: ['#성수동카페', '#하이존재배', '#사포닌충전', '#스마트수경재배'],
+      hero_media: {
+        banner: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBoCcQcf4SleMGa51U7S1bQVwH6noFhJZYjICLPV9So2ClfBhqpL2HSctlY7mtwC8kZQXOhpwPDptsFZ1bik_QdNipIDhmtDNiiLCe95UGWGYyU94i3z6EyX-CMTGlnSfCEH9oDmF1dtgTXCtaF_AA91ukrSmx6KmwJLOHJuPCJY4imA8JaDIfjVFTxWgJsc_uy67KjDZbG0Vt9_KHNFF1rOuAZybgSd3rknsovOr1mNJ0O3Nc7Z64',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCh7F3npou2-qnO-Xsib3KeY_airt7-D3WdHhEFI4VJp_tv4WgMsewG_Vgye4HKYjswn4-u7qiRk9UZD7gdi6kT6qvIhrm1ixhL8EcR6mlciOKWm2gmk2jxR1JzJ2ZPZlkr51cTezw3HG37VnL4ayJCcEc9rUVKhkwsSRNSOWTlE4OCaZeUfameLD7u2R9WA_rpzUXK-qutrlJ7i1fd3niuifFH3Y6zm0n_Q99Ar8G9vwMwo0owcds',
+        video_thumb: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBoCcQcf4SleMGa51U7S1bQVwH6noFhJZYjICLPV9So2ClfBhqpL2HSctlY7mtwC8kZQXOhpwPDptsFZ1bik_QdNipIDhmtDNiiLCe95UGWGYyU94i3z6EyX-CMTGlnSfCEH9oDmF1dtgTXCtaF_AA91ukrSmx6KmwJLOHJuPCJY4imA8JaDIfjVFTxWgJsc_uy67KjDZbG0Vt9_KHNFF1rOuAZybgSd3rknsovOr1mNJ0O3Nc7Z64',
+        photo_1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCf6euot16Zc_T5y-vMpXKQ4MkZBDug2ANHf1QAT5FwjISPRzZy112QncPjMIJL33s5iAsSrCjHfSfleCZPz5SwFatE2OVc9P4QLDF59RScwFm-dt0AUyFR6kD_K18E4szhIZCHeSz3bggCXPrqZTe4zdvXqhwDIosoatvD4aCRDkeUzN81eQXps-jB3G40wy8W5OJ4sGJe3VBTH9twMNRQimQ5OmL4C1kjgvALRET7WlQwxWl_mS4',
+        photo_2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBSSUPDsfTZpXUIrA7sj6o_ERrvIPDBsV4Q0GAwDXqhbPx4bxxamFKRemI9orbZ6odwqHTlgbiIJ4ihDHZFRcJ6TpauQdvxpwcfegO3bYwjeoTZGDZKHTZ4bmd8O2fuXsMDWZp-WTA-Bgb4WSO0lellsrTgRn69Z6cG-Nm-Cl4m6DJlJ11KeKXGry6zQGgU5JgNrZ1FdskkzFCIWOSR2NGpWSrFkg9yO_fHu9cypw-8AFvZ75NZBLE'
+      },
+      kakao_channel_url: 'https://pf.kakao.com/_hizone_seongsu',
+      status: 'active',
+      created_at: '2026-02-22T14:30:00Z'
+    },
+    {
+      id: 'tnt-pangyo',
+      user_id: 'usr-003',
+      slug: 'pangyo-biolab',
+      name: '판교 룸파밍 바이오랩',
+      space_type: '옥상/창고',
+      intro_text: 'IT 테크 연구단지 지하 유휴공간을 활용한 청정 스마트팜. 최적의 알릴센 성분을 지닌 생와사비와 파이토케미컬 채소를 당일 직송합니다.',
+      theme_palette_id: 'white',
+      layout_variant: 'B',
+      location: '경기 성남시 분당구 판교역로 146',
+      tags: ['#룸파밍', '#생와사비', '#실내바이오랩', '#무농약직송'],
+      hero_media: {
+        banner: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAybvn1KZUgIh77ZglRSpezGnGnU4_gUUdQQloxaLkf6zqeHvg0sfBNiNWmQ_MokBDMmzmruiknisr0Io_GPBP8fGnAKw8fvKnvKQf3qK-xGlgEssuPm8Eo316hbZhANbmROVDLNTnKLLbDT-NQ6tKSvzn72cSKBcUO4wONuVd23Jr8LSV6ad_HFPxL8DHVCbS46q2pAuNyrV2_EQ2YwuqjGfwQFhFoVdCabySFWPPvQp5aJ8zyzkQ',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAybvn1KZUgIh77ZglRSpezGnGnU4_gUUdQQloxaLkf6zqeHvg0sfBNiNWmQ_MokBDMmzmruiknisr0Io_GPBP8fGnAKw8fvKnvKQf3qK-xGlgEssuPm8Eo316hbZhANbmROVDLNTnKLLbDT-NQ6tKSvzn72cSKBcUO4wONuVd23Jr8LSV6ad_HFPxL8DHVCbS46q2pAuNyrV2_EQ2YwuqjGfwQFhFoVdCabySFWPPvQp5aJ8zyzkQ',
+        video_thumb: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDA9kVUjyIhQDKakdIBuvHvUC_6K_j4anNPujX9U_tRHTi5BYNaozE99BChIhTGLfl1Mp82Unzlqo_rk-8Ldhy5hB2I-fGMpa-zBv4W7VNfzvsbEoPVY5x25ThlKnI5MWdawnf4Dc63Z-lFcYD3UHKnSKBQ1dcPppu-wLpV_DUaQyuyEI7nVWL7-GK9r61vozb0ZWqEIBWEx-Rot1wIdupUncdlGgSg6gS6sg0IxnF3o1frbOHfcYA',
+        photo_1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDA9kVUjyIhQDKakdIBuvHvUC_6K_j4anNPujX9U_tRHTi5BYNaozE99BChIhTGLfl1Mp82Unzlqo_rk-8Ldhy5hB2I-fGMpa-zBv4W7VNfzvsbEoPVY5x25ThlKnI5MWdawnf4Dc63Z-lFcYD3UHKnSKBQ1dcPppu-wLpV_DUaQyuyEI7nVWL7-GK9r61vozb0ZWqEIBWEx-Rot1wIdupUncdlGgSg6gS6sg0IxnF3o1frbOHfcYA',
+        photo_2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBrylP5DzOpgDkH33nvyyrlpcuBFYCRqkEYutL1opaJaYjbs1VBt9L-ZwiqWSHi5Xkr8BJ21j2vnh_yUGxckDIIHBg2-Lt_HEr0MPIcU5b33FB1vJeZSxkp1J9jvwNGRsCjjHiXZOKgPNcV9AKwm45V4-Z9do5ZtExtQ5C-i6bYRguwcqg043AGMxhqv90rfq1PKPzyBhhsfP05wuOm4Al7-ynOQvAuwqb2Xp0I7XgCgSxpgyLOfjM'
+      },
+      kakao_channel_url: 'https://pf.kakao.com/_hizone_pangyo',
+      status: 'active',
+      created_at: '2026-02-25T16:00:00Z'
+    }
+  ],
+
+  FEEDS: [
+    {
+      id: 'feed-001',
+      tenant_id: 'tnt-yeonnam',
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-1',
+      media_type: 'promo',
+      content: {
+        title: '도심 루프탑 새싹삼 수확 현장 🌿',
+        text: '도심 속 루프탑 바이오 스마트팟에서 아침 이슬을 머금고 자란 새싹삼을 수확했습니다. 싱싱한 사포닌 향이 가득해요!',
+        media_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD5DTdFhgH5A5UpyEwLbNwFslXjBPYUBZyf3XnGssYc2PF_HIVWG0xjvL3_H4sawYt4fA8tNTpYS7mHuq__bCo6x-IJivz23-uGb_R31LGg41naxWJzoMgG3o_Q42Wi-rW6_iTr0nSzjURiDgis13ybHr8Hi-FiYwUdVdd0dqjdtAcmv9LmR-raMIFxtVJDpwlMFJzFINN0EKbR5WBDpVx2ebbiR6B18o1OcqzG9QG7OyilX4I1uqw',
+        likes: 42,
+        comment_count: 5
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-05T08:30:00Z'
+    },
+    {
+      id: 'feed-002',
+      tenant_id: 'tnt-yeonnam',
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-1',
+      media_type: 'product',
+      content: {
+        name: '하이존 기능성 새싹삼 프리미엄 10뿌리',
+        badge: '인증작물',
+        price: 38000,
+        original_price: 45000,
+        desc: '뿌리와 잎 전체를 섭취할 수 있는 하이존바이오 특화 재배 새싹인삼입니다.',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCf6euot16Zc_T5y-vMpXKQ4MkZBDug2ANHf1QAT5FwjISPRzZy112QncPjMIJL33s5iAsSrCjHfSfleCZPz5SwFatE2OVc9P4QLDF59RScwFm-dt0AUyFR6kD_K18E4szhIZCHeSz3bggCXPrqZTe4zdvXqhwDIosoatvD4aCRDkeUzN81eQXps-jB3G40wy8W5OJ4sGJe3VBTH9twMNRQimQ5OmL4C1kjgvALRET7WlQwxWl_mS4',
+        likes: 18
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-05T09:00:00Z'
+    },
+    {
+      id: 'feed-003',
+      tenant_id: 'tnt-yeonnam',
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-3',
+      media_type: 'product',
+      content: {
+        name: '카페 직수확 신선 바질 & 허브팩',
+        badge: '당일수확',
+        price: 12000,
+        original_price: 15000,
+        desc: '주문 즉시 바이오 스마트팟에서 바로 수확해 패키징하는 초신선 스위트 바질.',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBSSUPDsfTZpXUIrA7sj6o_ERrvIPDBsV4Q0GAwDXqhbPx4bxxamFKRemI9orbZ6odwqHTlgbiIJ4ihDHZFRcJ6TpauQdvxpwcfegO3bYwjeoTZGDZKHTZ4bmd8O2fuXsMDWZp-WTA-Bgb4WSO0lellsrTgRn69Z6cG-Nm-Cl4m6DJlJ11KeKXGry6zQGgU5JgNrZ1FdskkzFCIWOSR2NGpWSrFkg9yO_fHu9cypw-8AFvZ75NZBLE',
+        likes: 29
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-05T10:15:00Z'
+    },
+    {
+      id: 'feed-004',
+      tenant_id: 'tnt-seongsu',
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-1',
+      media_type: 'promo',
+      content: {
+        title: '성수동 그린루프의 시그니처 새싹삼 라떼 쇼츠 ☕',
+        text: '오늘 아침 수확한 하이존 기능성 새싹인삼 입고 완료! 뿌리부터 잎까지 통째로 갈아넣은 라떼를 성수점에서 직접 맛보실 수 있어요.',
+        media_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBoCcQcf4SleMGa51U7S1bQVwH6noFhJZYjICLPV9So2ClfBhqpL2HSctlY7mtwC8kZQXOhpwPDptsFZ1bik_QdNipIDhmtDNiiLCe95UGWGYyU94i3z6EyX-CMTGlnSfCEH9oDmF1dtgTXCtaF_AA91ukrSmx6KmwJLOHJuPCJY4imA8JaDIfjVFTxWgJsc_uy67KjDZbG0Vt9_KHNFF1rOuAZybgSd3rknsovOr1mNJ0O3Nc7Z64',
+        duration: '0:45 쇼츠',
+        likes: 85,
+        comment_count: 14
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-06T07:20:00Z'
+    },
+    {
+      id: 'feed-005',
+      tenant_id: 'tnt-pangyo',
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-2',
+      media_type: 'product',
+      content: {
+        name: '정밀 수경재배 생와사비 뿌리생채 (100g)',
+        badge: '수경재배',
+        price: 24000,
+        original_price: 28000,
+        desc: '실내 환경제어 시스템에서 최적의 알릴센 화합물을 형성한 신선 와사비 뿌리.',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDA9kVUjyIhQDKakdIBuvHvUC_6K_j4anNPujX9U_tRHTi5BYNaozE99BChIhTGLfl1Mp82Unzlqo_rk-8Ldhy5hB2I-fGMpa-zBv4W7VNfzvsbEoPVY5x25ThlKnI5MWdawnf4Dc63Z-lFcYD3UHKnSKBQ1dcPppu-wLpV_DUaQyuyEI7nVWL7-GK9r61vozb0ZWqEIBWEx-Rot1wIdupUncdlGgSg6gS6sg0IxnF3o1frbOHfcYA',
+        likes: 53
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-06T11:40:00Z'
+    },
+    {
+      id: 'feed-006',
+      tenant_id: 'tnt-pangyo',
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-4',
+      media_type: 'product',
+      content: {
+        name: '항산화 마이크로 케일 & 베이비 채소팩',
+        badge: '파이토케미컬',
+        price: 15000,
+        original_price: 18000,
+        desc: '고농축 항산화 성분을 극대화한 클린룸 수확 유기농 샐러드팩입니다.',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBrylP5DzOpgDkH33nvyyrlpcuBFYCRqkEYutL1opaJaYjbs1VBt9L-ZwiqWSHi5Xkr8BJ21j2vnh_yUGxckDIIHBg2-Lt_HEr0MPIcU5b33FB1vJeZSxkp1J9jvwNGRsCjjHiXZOKgPNcV9AKwm45V4-Z9do5ZtExtQ5C-i6bYRguwcqg043AGMxhqv90rfq1PKPzyBhhsfP05wuOm4Al7-ynOQvAuwqb2Xp0I7XgCgSxpgyLOfjM',
+        likes: 31
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-06T12:10:00Z'
+    },
+    {
+      id: 'feed-007',
+      tenant_id: 'tnt-yeonnam',
+      category_id: 'cat-bio',
+      category_tag_id: null,
+      media_type: 'comment',
+      content: {
+        author: '마포구주민 A',
+        text: '옥상에서 직접 키운 새싹삼 음료 너무 신선해요! 도심 한복판에서 이런 스마트팜을 구경할 수 있어서 신기했습니다 🌱',
+        date: '2026-03-06',
+        likes: 4
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-06T13:00:00Z'
+    },
+    {
+      id: 'feed-008',
+      tenant_id: 'tnt-yeonnam',
+      category_id: 'cat-bio',
+      category_tag_id: null,
+      media_type: 'comment',
+      content: {
+        author: '허브애호가 K',
+        text: '다음 주 수확분 예약 가능한가요? 지난번에 바질 구매해서 파스타 만들어 먹었는데 향이 마트 상품이랑 차원이 달라요!',
+        date: '2026-03-06',
+        reply: '안녕하세요! 다음 주 화요일 오전 10시에 새싹삼 및 스위트바질 추가 수확 예정입니다. 상단 카카오 채널로 연락 주시면 사전 홀딩해 드리겠습니다 :)',
+        likes: 2
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: '2026-03-06T14:15:00Z'
+    }
+  ],
+
+  KAKAO_WEBHOOK_LOGS: [
+    {
+      id: 'log-001',
+      tenant_id: 'tnt-yeonnam',
+      feed_id: null,
+      trigger_type: 'generation_complete',
+      status: 'success',
+      retry_count: 0,
+      payload: {
+        trigger_type: 'generation_complete',
+        tenant_id: 'tnt-yeonnam',
+        recipient: ['owner', 'admin'],
+        template_vars: {
+          tenant_name: '연남동 그리너리 카페 & 옥상정원',
+          mini_homepage_url: 'https://hizone-garden.surge.sh/#/m/yeonnam-greenery',
+          generated_at: '2026-02-20T10:00:00Z'
+        }
+      },
+      attempted_at: '2026-02-20T10:00:01Z'
+    },
+    {
+      id: 'log-002',
+      tenant_id: 'tnt-seongsu',
+      feed_id: null,
+      trigger_type: 'generation_complete',
+      status: 'success',
+      retry_count: 0,
+      payload: {
+        trigger_type: 'generation_complete',
+        tenant_id: 'tnt-seongsu',
+        recipient: ['owner', 'admin'],
+        template_vars: {
+          tenant_name: '성수동 그린루프 복합문화카페',
+          mini_homepage_url: 'https://hizone-garden.surge.sh/#/m/seongsu-greenroof',
+          generated_at: '2026-02-22T14:30:00Z'
+        }
+      },
+      attempted_at: '2026-02-22T14:30:01Z'
+    },
+    {
+      id: 'log-003',
+      tenant_id: 'tnt-yeonnam',
+      feed_id: 'feed-008',
+      trigger_type: 'new_event',
+      status: 'success',
+      retry_count: 0,
+      payload: {
+        trigger_type: 'new_event',
+        tenant_id: 'tnt-yeonnam',
+        feed_id: 'feed-008',
+        event_kind: 'comment',
+        recipient: ['owner', 'admin'],
+        template_vars: {
+          tenant_name: '연남동 그리너리 카페 & 옥상정원',
+          event_type: '방명록 댓글 등록',
+          summary: '다음 주 수확분 예약 가능한가요?... (작성자: 허브애호가 K)',
+          occurred_at: '2026-03-06T14:15:00Z'
+        }
+      },
+      attempted_at: '2026-03-06T14:15:01Z'
+    }
+  ]
+};
+
+// Database Access Layer
+class HizoneDB {
+  constructor() {
+    this.data = this.load();
+  }
+
+  load() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {
+      console.warn('LocalStorage error, using defaults:', e);
+    }
+    return JSON.parse(JSON.stringify(DEFAULT_DB));
+  }
+
+  save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+    } catch (e) {
+      console.error('Failed to save to localStorage:', e);
+    }
+  }
+
+  reset() {
+    this.data = JSON.parse(JSON.stringify(DEFAULT_DB));
+    this.save();
+    return this.data;
+  }
+
+  getTenants() {
+    return this.data.TENANTS.filter(t => t.status === 'active');
+  }
+
+  getTenantBySlug(slug) {
+    return this.data.TENANTS.find(t => t.slug === slug && t.status === 'active');
+  }
+
+  getTenantById(id) {
+    return this.data.TENANTS.find(t => t.id === id);
+  }
+
+  getFeeds(filter = {}) {
+    let feeds = [...this.data.FEEDS].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    if (filter.tenant_id) {
+      feeds = feeds.filter(f => f.tenant_id === filter.tenant_id);
+    }
+    if (filter.media_type) {
+      feeds = feeds.filter(f => f.media_type === filter.media_type);
+    }
+    return feeds;
+  }
+
+  getWebhookLogs() {
+    return [...this.data.KAKAO_WEBHOOK_LOGS].sort((a, b) => new Date(b.attempted_at) - new Date(a.attempted_at));
+  }
+
+  // 3부 3-1: One-Shot Generation Engine
+  createTenantOneShot({ name, space_type, intro_text, theme_palette_id, layout_variant, phone, crop_names = [], hero_media }) {
+    // 1. Validation Gate
+    if (!name || !space_type) {
+      throw new Error('상호명과 공간 유형은 필수 입력 사항입니다.');
+    }
+    const validThemes = ['green', 'wood', 'white', 'ocean', 'amber'];
+    const selectedTheme = validThemes.includes(theme_palette_id) ? theme_palette_id : 'green';
+    const validLayouts = ['A', 'B', 'C'];
+    const selectedLayout = validLayouts.includes(layout_variant) ? layout_variant : 'A';
+
+    // 2. Slug Generation
+    const baseSlug = name.toLowerCase().replace(/[^a-z0-9가-힣]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'minihompy';
+    let slug = baseSlug;
+    let counter = 1;
+    while (this.data.TENANTS.some(t => t.slug === slug)) {
+      slug = `${baseSlug}-${counter++}`;
+    }
+
+    const tenantId = `tnt-${Date.now()}`;
+    const userId = `usr-${Date.now()}`;
+
+    // 3. Provision User
+    this.data.USERS.push({
+      id: userId,
+      phone: phone || '010-0000-0000',
+      kakao_uid: `kakao_${slug}`,
+      role: 'owner',
+      created_at: new Date().toISOString()
+    });
+
+    // 4. Default media images if not provided
+    const media = hero_media || {
+      banner: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfw59k7D4n6TNL6YZ3skBrBG_i5dYRcCjU7Dimyn28A6Od4OHVqC8yiQsIJ8Zy30wi-sBs4cSD5hUJC4zXdqn4Z2Ee1iqYM1JVLyGvCUNW_cmoKuPMiJlEhGIvhjy6QJ9NN8zbLk-0w90GBorGh-ymBksOxtM491x1Oy_D-zDp2WMrqRJyShvvfESYtj7xsdEL67YSrWauK2HXqsIPT_Uq57Z1R_4dS1xFStopogSj_H9QFzOo9Kc',
+      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBER3Abra6Eqx9rY-QqUr-_eBcEXlHOLwpe-KKj16cP7oYodPc-V3Migl3zaadUfL7GEnOKhnUed7LDYT-9kkQC5LN2q3NoGzp5WQ5fgmbW2pnSZsJv6YTTjiWaRVYEmFOodBYAXYs4byJKZUjyKXRLsJmi0Na-MEnXt02vInMHepifxVdQhyjDmA_RLSn88tjulOXkgQw4VqwCpjiF_18IjbZU-qbiN5Rk1w5iUrH_WJAdpMY6kko',
+      video_thumb: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD5DTdFhgH5A5UpyEwLbNwFslXjBPYUBZyf3XnGssYc2PF_HIVWG0xjvL3_H4sawYt4fA8tNTpYS7mHuq__bCo6x-IJivz23-uGb_R31LGg41naxWJzoMgG3o_Q42Wi-rW6_iTr0nSzjURiDgis13ybHr8Hi-FiYwUdVdd0dqjdtAcmv9LmR-raMIFxtVJDpwlMFJzFINN0EKbR5WBDpVx2ebbiR6B18o1OcqzG9QG7OyilX4I1uqw',
+      photo_1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB5UJL9OWfs7Juq3-3PpgZBpjytXm7jF4P9JP1B-yjTl7Dyva7GgveX-Q608A9L3oWXcVOMmCONwYamRWtk2f5LScRuLXQGVwiFabx_NpS2RtxSx6TcTa9IVrUisvCFUS91DQcjoiGebR9X5WZ6GkpYrqWO7UxEGDGpQ6TzDC3C1tGFpF2G33FIRIp4Gf8rr-PBQb_A6adsXhv9eYAzQ_SvCGg0MZ7k59f7kXPW5F172VWjlBFCLHQ',
+      photo_2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBV1F8siaS_8fe3zrsCmIwf1__t-uo9NitBWEThDLirSr5ycq4TMqGpqVVKXwp7OaYf-9O8iLZtFYEO1ATOjT2iiKycUJRoGtxlcHw3NSrCdennY40bT0jb63ZZTGNlSlKik89QfX1dBUQTQ-qZfJFaDDDEJ_LVfFTn-ozpG6Nq6g-cGVeOW3FIuwtUuwPFKgSShAF6KzB8yIiaaVrEJZWpW79TGfXkRX0O3ugo2GnkCMaAHnslM6U'
+    };
+
+    // 5. Tenant Provisioning
+    const newTenant = {
+      id: tenantId,
+      user_id: userId,
+      slug,
+      name,
+      space_type,
+      intro_text: intro_text || `${name}의 하이존바이오 스마트 공간입니다. 신선하고 건강한 기능성 작물을 직접 재배합니다.`,
+      theme_palette_id: selectedTheme,
+      layout_variant: selectedLayout,
+      location: '서울 도심 유휴공간',
+      tags: ['#하이존가든', `#${space_type}`, ...crop_names.map(c => `#${c.replace(/\s+/g, '')}`)],
+      hero_media: media,
+      kakao_channel_url: `https://pf.kakao.com/_hizone_${slug}`,
+      status: 'active',
+      created_at: new Date().toISOString()
+    };
+
+    this.data.TENANTS.unshift(newTenant);
+
+    // 6. Generate default product & promo feed
+    this.data.FEEDS.unshift({
+      id: `feed-${Date.now()}-promo`,
+      tenant_id: tenantId,
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-1',
+      media_type: 'promo',
+      content: {
+        title: `${name} 새단장 오픈 스토리 🌱`,
+        text: intro_text || `${name}에서 하이존바이오 바이오 스마트팟을 본격 가동합니다! 신선한 기능성 작물을 만나보세요.`,
+        media_url: media.banner,
+        likes: 1,
+        comment_count: 0
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: new Date().toISOString()
+    });
+
+    this.data.FEEDS.unshift({
+      id: `feed-${Date.now()}-prod`,
+      tenant_id: tenantId,
+      category_id: 'cat-bio',
+      category_tag_id: 'tag-crop-1',
+      media_type: 'product',
+      content: {
+        name: crop_names.length ? `${crop_names[0]} 신선 팩` : '하이존 기능성 작물 데일리팩',
+        badge: '당일수확',
+        price: 18000,
+        original_price: 22000,
+        desc: `${name}에서 정성껏 수경재배한 무농약 프리미엄 기능성 작물입니다.`,
+        image: media.photo_1,
+        likes: 0
+      },
+      popularity_score: null,
+      sync_status: 'synced',
+      created_at: new Date().toISOString()
+    });
+
+    // 7. Post-Generation Hook: Kakao Webhook (trigger_type='generation_complete')
+    const webhookLog = {
+      id: `log-${Date.now()}`,
+      tenant_id: tenantId,
+      feed_id: null,
+      trigger_type: 'generation_complete',
+      status: 'success',
+      retry_count: 0,
+      payload: {
+        trigger_type: 'generation_complete',
+        tenant_id: tenantId,
+        recipient: ['owner', 'admin'],
+        template_vars: {
+          tenant_name: name,
+          mini_homepage_url: `${window.location.origin}${window.location.pathname}#/m/${slug}`,
+          generated_at: newTenant.created_at
+        }
+      },
+      attempted_at: new Date().toISOString()
+    };
+
+    this.data.KAKAO_WEBHOOK_LOGS.unshift(webhookLog);
+    this.save();
+
+    return { tenant: newTenant, webhookLog };
+  }
+
+  // 3부 3-3: Upsert Pipeline (Feed & Event Sync)
+  addComment({ tenant_id, author, text }) {
+    if (!text || !text.trim()) return null;
+
+    const feedId = `feed-${Date.now()}`;
+    const commentFeed = {
+      id: feedId,
+      tenant_id,
+      category_id: 'cat-bio',
+      category_tag_id: null,
+      media_type: 'comment',
+      content: {
+        author: author || '익명 방문자',
+        text: text.trim(),
+        date: new Date().toISOString().split('T')[0],
+        likes: 0
+      },
+      popularity_score: null,
+      sync_status: 'synced', // Commit check succeeded
+      created_at: new Date().toISOString()
+    };
+
+    this.data.FEEDS.unshift(commentFeed);
+
+    const tenant = this.getTenantById(tenant_id);
+
+    // Event Emit: KAKAO_WEBHOOK_LOGS (trigger_type='new_event')
+    const webhookLog = {
+      id: `log-${Date.now()}`,
+      tenant_id,
+      feed_id: feedId,
+      trigger_type: 'new_event',
+      status: 'success',
+      retry_count: 0,
+      payload: {
+        trigger_type: 'new_event',
+        tenant_id,
+        feed_id: feedId,
+        event_kind: 'comment',
+        recipient: ['owner', 'admin'],
+        template_vars: {
+          tenant_name: tenant ? tenant.name : '하이존가든 테넌트',
+          event_type: '방명록 신규 댓글',
+          summary: `${author || '방문자'}: ${text.slice(0, 30)}...`,
+          occurred_at: commentFeed.created_at
+        }
+      },
+      attempted_at: new Date().toISOString()
+    };
+
+    this.data.KAKAO_WEBHOOK_LOGS.unshift(webhookLog);
+    this.save();
+
+    return { feed: commentFeed, webhookLog };
+  }
+
+  orderProduct({ tenant_id, product_name, buyer_name, phone }) {
+    const feedId = `feed-order-${Date.now()}`;
+    const tenant = this.getTenantById(tenant_id);
+
+    // Event Emit: KAKAO_WEBHOOK_LOGS (trigger_type='new_event')
+    const webhookLog = {
+      id: `log-${Date.now()}`,
+      tenant_id,
+      feed_id: feedId,
+      trigger_type: 'new_event',
+      status: 'success',
+      retry_count: 0,
+      payload: {
+        trigger_type: 'new_event',
+        tenant_id,
+        feed_id: feedId,
+        event_kind: 'order',
+        recipient: ['owner', 'admin'],
+        template_vars: {
+          tenant_name: tenant ? tenant.name : '하이존가든 테넌트',
+          event_type: '신규 상품 구매/예약',
+          summary: `[${product_name}] 구매자: ${buyer_name} (${phone || '전화번호 미입력'})`,
+          occurred_at: new Date().toISOString()
+        }
+      },
+      attempted_at: new Date().toISOString()
+    };
+
+    this.data.KAKAO_WEBHOOK_LOGS.unshift(webhookLog);
+    this.save();
+
+    return { webhookLog };
+  }
+
+  toggleLike(feedId) {
+    const feed = this.data.FEEDS.find(f => f.id === feedId);
+    if (feed && feed.content) {
+      feed.content.likes = (feed.content.likes || 0) + 1;
+      this.save();
+      return feed.content.likes;
+    }
+    return 0;
+  }
+}
+
+window.HizoneDB = new HizoneDB();
+
+</script>
+  <script>
+/**
+ * 하이존가든 미니홈피 엔진 — Application Controller & Routing Engine
+ * 준수 규격: 1단계 통합 아키텍처 가이드 1부, 3부, 4부 전격 구현
+ */
+
+(function () {
+  const db = window.HizoneDB;
+
+  // DOM Elements
+  const viewPortal = document.getElementById('view-portal');
+  const viewOnboard = document.getElementById('view-onboard');
+  const viewHompy = document.getElementById('view-hompy');
+  const viewLogs = document.getElementById('view-logs');
+
+  const navItems = document.querySelectorAll('nav [data-path]');
+  const alimtalkToast = document.getElementById('alimtalk-toast');
+  const alimtalkTitle = document.getElementById('alimtalk-title');
+  const alimtalkBody = document.getElementById('alimtalk-body');
+  const alimtalkTime = document.getElementById('alimtalk-time');
+  const alimtalkBadge = document.getElementById('alimtalk-badge');
+
+  // State
+  let currentView = 'portal'; // 'portal' | 'onboard' | 'hompy' | 'logs'
+  let currentTenantSlug = 'yeonnam-greenery';
+  let activeCropFilter = 'all';
+  let activeSpaceFilter = 'all';
+  let searchQuery = '';
+
+  // Theme palettes configuration
+  const THEME_STYLES = {
+    green: {
+      primary: '#006c49',
+      primaryContainer: '#10b981',
+      bgTag: 'bg-primary/10 text-primary',
+      border: 'border-primary'
+    },
+    wood: {
+      primary: '#5c4033',
+      primaryContainer: '#b38059',
+      bgTag: 'bg-[#5c4033]/10 text-[#5c4033]',
+      border: 'border-[#5c4033]'
+    },
+    white: {
+      primary: '#1e293b',
+      primaryContainer: '#64748b',
+      bgTag: 'bg-slate-200 text-slate-800',
+      border: 'border-slate-700'
+    },
+    ocean: {
+      primary: '#0284c7',
+      primaryContainer: '#38bdf8',
+      bgTag: 'bg-sky-100 text-sky-800',
+      border: 'border-sky-600'
+    },
+    amber: {
+      primary: '#d97706',
+      primaryContainer: '#f59e0b',
+      bgTag: 'bg-amber-100 text-amber-900',
+      border: 'border-amber-600'
+    }
+  };
+
+  // --- Router & View Switcher ---
+  function navigate(path, params = {}) {
+    if (params.slug) {
+      currentTenantSlug = params.slug;
+    }
+
+    if (path === 'portal' || path === 'portal-feed') {
+      currentView = 'portal';
+      window.location.hash = '#/portal';
+      renderPortalFeed();
+    } else if (path === 'onboard' || path === 'onboarding-and-creation') {
+      currentView = 'onboard';
+      window.location.hash = '#/onboard';
+    } else if (path === 'hompy' || path === 'tenant-master-minihompy') {
+      currentView = 'hompy';
+      window.location.hash = `#/m/${currentTenantSlug}`;
+      renderMiniHompy(currentTenantSlug);
+    } else if (path === 'logs' || path === 'kakao-logs') {
+      currentView = 'logs';
+      window.location.hash = '#/logs';
+      renderWebhookLogs();
+    }
+
+    updateNavActiveState();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleHashChange() {
+    const hash = window.location.hash || '#/portal';
+    if (hash.startsWith('#/m/')) {
+      const slug = hash.replace('#/m/', '').trim();
+      currentTenantSlug = slug || 'yeonnam-greenery';
+      navigate('hompy', { slug: currentTenantSlug });
+    } else if (hash.includes('onboard')) {
+      navigate('onboard');
+    } else if (hash.includes('logs')) {
+      navigate('logs');
+    } else {
+      navigate('portal');
+    }
+  }
+
+  function updateNavActiveState() {
+    viewPortal.classList.toggle('hidden', currentView !== 'portal');
+    viewOnboard.classList.toggle('hidden', currentView !== 'onboard');
+    viewHompy.classList.toggle('hidden', currentView !== 'hompy');
+    viewLogs.classList.toggle('hidden', currentView !== 'logs');
+
+    navItems.forEach(item => {
+      const itemPath = item.getAttribute('data-path');
+      const isActive =
+        (currentView === 'portal' && itemPath === 'portal-feed') ||
+        (currentView === 'onboard' && itemPath === 'onboarding-and-creation') ||
+        (currentView === 'hompy' && itemPath === 'tenant-master-minihompy') ||
+        (currentView === 'logs' && itemPath === 'kakao-logs');
+
+      if (isActive) {
+        item.classList.add('text-primary', 'font-bold');
+        item.classList.remove('text-on-surface-variant');
+      } else {
+        item.classList.remove('text-primary', 'font-bold');
+        item.classList.add('text-on-surface-variant');
+      }
+    });
+
+    updateNotificationBadge();
+  }
+
+  function updateNotificationBadge() {
+    const logs = db.getWebhookLogs();
+    if (alimtalkBadge) {
+      alimtalkBadge.textContent = logs.length;
+      alimtalkBadge.classList.toggle('hidden', logs.length === 0);
+    }
+  }
+
+  // --- Alimtalk Toast Display ---
+  function showAlimtalkToast({ title, summary, tenant_name, time }) {
+    if (!alimtalkToast) return;
+
+    if (alimtalkTitle) alimtalkTitle.textContent = title || '[카카오 알림톡] 발송 완료';
+    if (alimtalkBody) {
+      alimtalkBody.innerHTML = `
+        <div class="font-bold text-[#191919]">${tenant_name || '하이존가든'}</div>
+        <div class="text-[12px] text-[#191919]/90 mt-0.5">${summary}</div>
+      `;
+    }
+    if (alimtalkTime) alimtalkTime.textContent = time || '방금 전';
+
+    alimtalkToast.classList.remove('translate-y-[-150%]', 'opacity-0');
+    alimtalkToast.classList.add('translate-y-0', 'opacity-100');
+
+    updateNotificationBadge();
+
+    setTimeout(() => {
+      alimtalkToast.classList.add('translate-y-[-150%]', 'opacity-0');
+      alimtalkToast.classList.remove('translate-y-0', 'opacity-100');
+    }, 4500);
+  }
+
+  // --- Template C: Unified Portal Feed Renderer ---
+  function renderPortalFeed() {
+    const feedContainer = document.getElementById('portal-feed-stream');
+    const tenants = db.getTenants();
+    const allFeeds = db.getFeeds();
+
+    // Update Live Metrics Ribbon
+    const metricTenants = document.getElementById('metric-tenants');
+    const metricCrops = document.getElementById('metric-crops');
+    const metricFeeds = document.getElementById('metric-feeds');
+    if (metricTenants) metricTenants.textContent = tenants.length;
+    if (metricCrops) metricCrops.textContent = 4 + (tenants.length * 2);
+    if (metricFeeds) metricFeeds.textContent = allFeeds.length;
+
+    // Filter feeds based on search query, crop, space
+    let filteredFeeds = allFeeds.filter(f => {
+      const tenant = db.getTenantById(f.tenant_id);
+      if (!tenant) return false;
+
+      // Crop filter
+      if (activeCropFilter !== 'all') {
+        const matchesCrop =
+          (f.category_tag_id && f.category_tag_id.includes(activeCropFilter)) ||
+          (f.content.name && f.content.name.includes(activeCropFilter)) ||
+          (tenant.tags && tenant.tags.some(t => t.includes(activeCropFilter)));
+        if (!matchesCrop) return false;
+      }
+
+      // Space filter
+      if (activeSpaceFilter !== 'all') {
+        if (!tenant.space_type.includes(activeSpaceFilter)) return false;
+      }
+
+      // Search query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const inTenant = tenant.name.toLowerCase().includes(q) || tenant.space_type.toLowerCase().includes(q);
+        const inContent =
+          (f.content.title && f.content.title.toLowerCase().includes(q)) ||
+          (f.content.text && f.content.text.toLowerCase().includes(q)) ||
+          (f.content.name && f.content.name.toLowerCase().includes(q));
+        if (!inTenant && !inContent) return false;
+      }
+
+      return true;
+    });
+
+    if (!feedContainer) return;
+    feedContainer.innerHTML = '';
+
+    if (filteredFeeds.length === 0) {
+      feedContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center p-8 bg-surface-container-lowest rounded-xl text-center">
+          <span class="material-symbols-outlined text-[40px] text-outline">search_off</span>
+          <p class="font-headline-sm text-on-surface mt-2">일치하는 피드가 없습니다.</p>
+          <p class="font-body-sm text-on-surface-variant mt-1">검색어나 필터를 초기화해 보세요.</p>
+          <button class="mt-4 px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-md" onclick="window.resetFilters()">전체 보기</button>
+        </div>
+      `;
+      return;
+    }
+
+    filteredFeeds.forEach(feed => {
+      const tenant = db.getTenantById(feed.tenant_id);
+      if (!tenant) return;
+
+      const card = document.createElement('article');
+      card.className = 'bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col mb-4 transition-all hover:shadow-md';
+
+      if (feed.media_type === 'promo') {
+        card.innerHTML = `
+          <!-- Tenant Header -->
+          <div class="p-3.5 flex items-center justify-between border-b border-surface-container-low">
+            <div class="flex items-center space-x-2.5 min-w-0 cursor-pointer" onclick="window.openMiniHompy('${tenant.slug}')">
+              <div class="relative w-10 h-10 rounded-full overflow-hidden shrink-0 bg-surface-container">
+                <img class="w-full h-full object-cover" src="${tenant.hero_media.avatar}" alt="${tenant.name}">
+              </div>
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center space-x-1.5">
+                  <span class="font-headline-sm text-headline-sm text-on-surface truncate">${tenant.name}</span>
+                  <span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                </div>
+                <span class="font-label-sm text-label-sm text-outline truncate">${tenant.space_type} · ${tenant.location}</span>
+              </div>
+            </div>
+            <button class="shrink-0 px-2.5 py-1 bg-surface-container text-on-surface-variant hover:bg-primary-container hover:text-on-primary-container rounded-lg font-label-md text-label-md flex items-center space-x-1 transition-colors" onclick="window.openMiniHompy('${tenant.slug}')">
+              <span>방문</span>
+              <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </button>
+          </div>
+          <!-- Media Block -->
+          <div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden group cursor-pointer" onclick="window.openMiniHompy('${tenant.slug}')">
+            <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="${feed.content.media_url}" alt="${feed.content.title}">
+            <div class="absolute inset-0 bg-gradient-to-t from-on-background/75 via-transparent to-black/20 flex flex-col justify-between p-3">
+              <div class="self-end px-2 py-0.5 rounded-full bg-on-background/60 backdrop-blur-md text-surface font-label-sm text-label-sm flex items-center space-x-1">
+                <span class="material-symbols-outlined text-[14px] text-error" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                <span>${feed.content.duration || 'LIVE FEED'}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-surface/90 text-primary flex items-center justify-center shadow">
+                  <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                </div>
+                <span class="font-headline-sm text-surface font-semibold drop-shadow-sm line-clamp-1">${feed.content.title}</span>
+              </div>
+            </div>
+          </div>
+          <!-- Content Description -->
+          <div class="p-3.5 space-y-2">
+            <p class="font-body-md text-body-md text-on-surface leading-relaxed">${feed.content.text}</p>
+            <div class="flex flex-wrap gap-1">
+              ${(tenant.tags || []).map(t => `<span class="font-label-sm text-label-sm text-primary bg-primary/10 px-2 py-0.5 rounded">${t}</span>`).join('')}
+            </div>
+          </div>
+          <!-- Social Interaction Bar -->
+          <div class="px-3.5 pb-3.5 pt-1 flex items-center justify-between text-on-surface-variant border-t border-surface-container-low">
+            <div class="flex items-center space-x-4">
+              <button class="flex items-center space-x-1 text-error hover:opacity-80 transition-opacity" onclick="window.likeFeed('${feed.id}', this)">
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                <span class="font-label-md text-label-md feed-likes">${feed.content.likes || 0}</span>
+              </button>
+              <button class="flex items-center space-x-1 text-on-surface-variant hover:text-on-surface transition-colors" onclick="window.openMiniHompy('${tenant.slug}')">
+                <span class="material-symbols-outlined text-[18px]">chat_bubble_outline</span>
+                <span class="font-label-md text-label-md">${feed.content.comment_count || 0}</span>
+              </button>
+            </div>
+            <button class="flex items-center space-x-1 px-3 py-1 bg-surface-container rounded-lg text-on-surface-variant hover:bg-secondary-container hover:text-on-secondary-container transition-colors" onclick="window.openKakaoChat('${tenant.name}')">
+              <span class="material-symbols-outlined text-[16px] text-primary">forum</span>
+              <span class="font-label-md text-label-md">카톡 문의</span>
+            </button>
+          </div>
+        `;
+      } else if (feed.media_type === 'product') {
+        card.innerHTML = `
+          <!-- Tenant Header -->
+          <div class="p-3.5 flex items-center justify-between border-b border-surface-container-low">
+            <div class="flex items-center space-x-2.5 min-w-0 cursor-pointer" onclick="window.openMiniHompy('${tenant.slug}')">
+              <div class="relative w-10 h-10 rounded-full overflow-hidden shrink-0 bg-surface-container">
+                <img class="w-full h-full object-cover" src="${tenant.hero_media.avatar}" alt="${tenant.name}">
+              </div>
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center space-x-1.5">
+                  <span class="font-headline-sm text-headline-sm text-on-surface truncate">${tenant.name}</span>
+                  <span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                </div>
+                <span class="font-label-sm text-label-sm text-outline truncate">하이존바이오 인증 특화작물</span>
+              </div>
+            </div>
+            <button class="shrink-0 px-2.5 py-1 bg-surface-container text-on-surface-variant hover:bg-primary-container hover:text-on-primary-container rounded-lg font-label-md text-label-md flex items-center space-x-1 transition-colors" onclick="window.openMiniHompy('${tenant.slug}')">
+              <span>홈피</span>
+              <span class="material-symbols-outlined text-[14px]">store</span>
+            </button>
+          </div>
+          <!-- Product Showcase -->
+          <div class="p-3.5 flex gap-3 items-center">
+            <div class="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-surface-container">
+              <img class="w-full h-full object-cover" src="${feed.content.image}" alt="${feed.content.name}">
+              <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-primary text-on-primary font-label-sm text-[10px]">${feed.content.badge || '인증작물'}</span>
+            </div>
+            <div class="flex flex-col flex-1 justify-between min-w-0">
+              <span class="font-headline-sm text-[15px] font-bold text-on-surface line-clamp-1">${feed.content.name}</span>
+              <p class="font-body-sm text-[12px] text-on-surface-variant mt-1 line-clamp-2">${feed.content.desc || ''}</p>
+              <div class="mt-2 flex items-baseline justify-between">
+                <div class="flex items-baseline gap-1">
+                  <span class="font-data-display text-[16px] font-bold text-primary">${(feed.content.price || 0).toLocaleString()}원</span>
+                  ${feed.content.original_price ? `<span class="font-label-sm text-[11px] text-outline line-through">${feed.content.original_price.toLocaleString()}원</span>` : ''}
+                </div>
+                <button class="px-2.5 py-1 rounded-lg bg-primary text-on-primary font-label-md text-[12px] flex items-center gap-1 shadow-sm active:scale-95" onclick="window.openOrderModal('${tenant.id}', '${feed.content.name}', ${feed.content.price})">
+                  <span class="material-symbols-outlined text-[14px]">shopping_bag</span>
+                  <span>주문</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      feedContainer.appendChild(card);
+    });
+  }
+
+  // --- Template B: Dynamic Master Template Mini-Homepage Renderer ---
+  function renderMiniHompy(slug) {
+    const tenant = db.getTenantBySlug(slug) || db.getTenants()[0];
+    if (!tenant) return;
+
+    currentTenantSlug = tenant.slug;
+
+    // Apply Theme Palette
+    const theme = THEME_STYLES[tenant.theme_palette_id] || THEME_STYLES.green;
+    const hompyShell = document.getElementById('hompy-shell');
+    if (hompyShell) {
+      hompyShell.style.setProperty('--theme-primary', theme.primary);
+      hompyShell.style.setProperty('--theme-container', theme.primaryContainer);
+    }
+
+    // Populate profile header
+    const bannerEl = document.getElementById('hompy-banner');
+    const avatarEl = document.getElementById('hompy-avatar');
+    const nameEl = document.getElementById('hompy-name');
+    const introEl = document.getElementById('hompy-intro');
+    const locationEl = document.getElementById('hompy-location');
+    const tagsContainer = document.getElementById('hompy-tags');
+
+    if (bannerEl) bannerEl.src = tenant.hero_media.banner;
+    if (avatarEl) avatarEl.src = tenant.hero_media.avatar;
+    if (nameEl) nameEl.textContent = tenant.name;
+    if (introEl) introEl.textContent = tenant.intro_text;
+    if (locationEl) locationEl.textContent = tenant.location || '서울 도심 스마트팜';
+
+    if (tagsContainer) {
+      tagsContainer.innerHTML = (tenant.tags || [])
+        .map(tag => `<span class="bg-surface-container px-2.5 py-0.5 rounded-full text-[12px] text-on-surface-variant">${tag}</span>`)
+        .join('');
+    }
+
+    // Promo Media Gallery
+    const promoMain = document.getElementById('hompy-media-main');
+    const promoSlot2 = document.getElementById('hompy-media-slot2');
+    const promoSlot3 = document.getElementById('hompy-media-slot3');
+    if (promoMain) promoMain.src = tenant.hero_media.video_thumb || tenant.hero_media.banner;
+    if (promoSlot2) promoSlot2.src = tenant.hero_media.photo_1;
+    if (promoSlot3) promoSlot3.src = tenant.hero_media.photo_2;
+
+    // Products Feed
+    const productsContainer = document.getElementById('hompy-products-grid');
+    const tenantProducts = db.getFeeds({ tenant_id: tenant.id, media_type: 'product' });
+
+    if (productsContainer) {
+      productsContainer.innerHTML = '';
+      if (tenantProducts.length === 0) {
+        productsContainer.innerHTML = `<p class="col-span-2 text-center text-outline text-sm py-4">등록된 재배 작물이 없습니다.</p>`;
+      } else {
+        tenantProducts.forEach(prod => {
+          const item = document.createElement('article');
+          item.className = 'flex flex-col bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden';
+          item.innerHTML = `
+            <div class="relative aspect-square bg-surface-container flex flex-col items-center justify-center text-center p-2 overflow-hidden">
+              <img class="absolute inset-0 w-full h-full object-cover" src="${prod.content.image}" alt="${prod.content.name}">
+              <span class="absolute top-2 left-2 px-1.5 py-0.5 bg-primary text-on-primary font-label-sm text-label-sm rounded">${prod.content.badge || '인증작물'}</span>
+            </div>
+            <div class="p-3 flex flex-col flex-1 justify-between gap-2">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm text-primary">[하이존 인증 상품]</span>
+                <h4 class="font-headline-sm text-[14px] leading-snug text-on-surface mt-0.5 line-clamp-2">${prod.content.name}</h4>
+              </div>
+              <div class="flex flex-col gap-1.5 mt-1">
+                <div class="flex items-baseline gap-1">
+                  <span class="font-data-display text-lg font-bold text-primary">${(prod.content.price || 0).toLocaleString()}원</span>
+                  ${prod.content.original_price ? `<span class="font-label-sm text-[11px] text-outline line-through ml-auto">${prod.content.original_price.toLocaleString()}원</span>` : ''}
+                </div>
+                <button class="w-full py-2 bg-primary text-on-primary rounded-xl font-label-lg text-[13px] flex items-center justify-center gap-1 shadow-sm active:scale-[0.98] transition-transform" onclick="window.openOrderModal('${tenant.id}', '${prod.content.name}', ${prod.content.price})">
+                  <span class="material-symbols-outlined text-[16px]">shopping_bag</span>
+                  <span>구매/예약하기</span>
+                </button>
+              </div>
+            </div>
+          `;
+          productsContainer.appendChild(item);
+        });
+      }
+    }
+
+    // Kakao Talk Banner
+    const kakaoActionBtn = document.getElementById('hompy-kakao-action');
+    if (kakaoActionBtn) {
+      kakaoActionBtn.onclick = () => window.openKakaoChat(tenant.name);
+    }
+
+    // Guestbook Comments
+    renderGuestbook(tenant.id);
+
+    // Apply Layout Variant (A / B / C)
+    applyLayoutVariant(tenant.layout_variant || 'A');
+
+    // Update Layout Switcher UI
+    document.querySelectorAll('.layout-switch-btn').forEach(btn => {
+      const variant = btn.getAttribute('data-variant');
+      if (variant === tenant.layout_variant) {
+        btn.classList.add('bg-primary', 'text-on-primary');
+        btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+      } else {
+        btn.classList.remove('bg-primary', 'text-on-primary');
+        btn.classList.add('bg-surface-container', 'text-on-surface-variant');
+      }
+    });
+
+    // Tenant Switcher Dropdown in Top Bar
+    updateTenantSwitcherDropdown();
+  }
+
+  function applyLayoutVariant(variant) {
+    const layoutShell = document.getElementById('hompy-layout-shell');
+    const secProfile = document.getElementById('sec-profile');
+    const secPromo = document.getElementById('sec-promo');
+    const secProducts = document.getElementById('sec-products');
+    const secKakao = document.getElementById('sec-kakao');
+    const secGuestbook = document.getElementById('sec-guestbook');
+
+    if (!layoutShell) return;
+
+    // Reset styles
+    secProfile.style.order = '';
+    secPromo.style.order = '';
+    secProducts.style.order = '';
+    secKakao.style.order = '';
+    secGuestbook.style.order = '';
+
+    if (variant === 'A') {
+      // Standard Stack: Profile -> Promo -> Products -> Kakao -> Guestbook
+      secProfile.style.order = '1';
+      secPromo.style.order = '2';
+      secProducts.style.order = '3';
+      secKakao.style.order = '4';
+      secGuestbook.style.order = '5';
+    } else if (variant === 'B') {
+      // 2-Column Split order: Profile -> Kakao -> Promo -> Products -> Guestbook
+      secProfile.style.order = '1';
+      secKakao.style.order = '2';
+      secPromo.style.order = '3';
+      secProducts.style.order = '4';
+      secGuestbook.style.order = '5';
+    } else if (variant === 'C') {
+      // Media Hero first: Promo -> Profile -> Products -> Kakao -> Guestbook
+      secPromo.style.order = '1';
+      secProfile.style.order = '2';
+      secProducts.style.order = '3';
+      secKakao.style.order = '4';
+      secGuestbook.style.order = '5';
+    }
+  }
+
+  function renderGuestbook(tenantId) {
+    const listContainer = document.getElementById('hompy-guestbook-list');
+    const countEl = document.getElementById('hompy-guestbook-count');
+    const comments = db.getFeeds({ tenant_id: tenantId, media_type: 'comment' });
+
+    if (countEl) countEl.textContent = comments.length;
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '';
+    if (comments.length === 0) {
+      listContainer.innerHTML = `<p class="text-center text-outline text-sm py-4">첫 방명록을 남겨주세요!</p>`;
+      return;
+    }
+
+    comments.forEach(c => {
+      const el = document.createElement('div');
+      el.className = 'flex items-start gap-3 p-3 bg-surface-container-low rounded-xl mb-3';
+      el.innerHTML = `
+        <div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary flex items-center justify-center font-bold shrink-0">
+          <span class="material-symbols-outlined text-[20px]">person</span>
+        </div>
+        <div class="flex flex-col flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">${c.content.author || '방문자'}</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant shrink-0">${c.content.date || '최근'}</span>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface mt-1 leading-relaxed">${c.content.text}</p>
+          ${c.content.reply ? `
+            <div class="mt-2 p-2.5 bg-surface-container rounded-lg flex flex-col gap-0.5">
+              <div class="flex items-center gap-1 text-primary font-label-sm text-label-sm">
+                <span class="material-symbols-outlined text-[14px]">subdirectory_arrow_right</span>
+                <span class="font-semibold">사장님 댓글</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant pl-4">${c.content.reply}</p>
+            </div>
+          ` : ''}
+          <div class="flex items-center gap-3 mt-2">
+            <button class="flex items-center gap-1 font-label-sm text-label-sm text-primary" onclick="window.likeComment('${c.id}', this)">
+              <span class="material-symbols-outlined text-[14px]">thumb_up</span>
+              <span>도움됨 <span class="like-cnt">${c.content.likes || 0}</span></span>
+            </button>
+            <button class="font-label-sm text-label-sm text-on-surface-variant" onclick="alert('답글 작성 기능 준비 중입니다.')">답글달기</button>
+          </div>
+        </div>
+      `;
+      listContainer.appendChild(el);
+    });
+  }
+
+  function updateTenantSwitcherDropdown() {
+    const selector = document.getElementById('tenant-switcher-dropdown');
+    if (!selector) return;
+
+    const tenants = db.getTenants();
+    selector.innerHTML = tenants.map(t => `
+      <option value="${t.slug}" ${t.slug === currentTenantSlug ? 'selected' : ''}>
+        ${t.name} (${t.space_type})
+      </option>
+    `).join('');
+  }
+
+  // --- Template A: One-Shot Generation Execution ---
+  function setupOnboardingEngine() {
+    const promptInput = document.getElementById('ai-story-prompt');
+    const clearBtn = document.getElementById('prompt-clear-btn');
+    const chipButtons = document.querySelectorAll('#space-preset-group .chip-item');
+    const themeCards = document.querySelectorAll('#theme-selector-group .theme-card');
+    const themeLabel = document.getElementById('selected-theme-label');
+    const createBtn = document.getElementById('create-hompy-btn');
+    const phoneInput = document.getElementById('kakao-phone-input');
+
+    let selectedTheme = 'green';
+    let selectedLayout = 'A';
+
+    // Preset chip click
+    chipButtons.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const preset = chip.getAttribute('data-preset');
+        if (promptInput) {
+          promptInput.value = promptInput.value
+            ? `${promptInput.value} / ${preset}`
+            : `${preset} 공간에서 하이존바이오 스마트팟으로 기능성 작물 재배 중`;
+          promptInput.focus();
+        }
+      });
+    });
+
+    // Clear prompt
+    if (clearBtn && promptInput) {
+      clearBtn.addEventListener('click', () => {
+        promptInput.value = '';
+        promptInput.focus();
+      });
+    }
+
+    // Theme selector
+    themeCards.forEach(card => {
+      card.addEventListener('click', () => {
+        themeCards.forEach(c => {
+          c.classList.remove('bg-surface-container', 'ring-2', 'ring-primary');
+          c.classList.add('bg-surface-container-low');
+          const badge = c.querySelector('.theme-badge');
+          if (badge) badge.classList.add('hidden');
+        });
+
+        card.classList.remove('bg-surface-container-low');
+        card.classList.add('bg-surface-container', 'ring-2', 'ring-primary');
+        const badge = card.querySelector('.theme-badge');
+        if (badge) badge.classList.remove('hidden');
+
+        selectedTheme = card.getAttribute('data-theme-id') || 'green';
+        if (themeLabel) themeLabel.textContent = card.getAttribute('data-theme-name');
+      });
+    });
+
+    // Layout selector buttons
+    document.querySelectorAll('.onboard-layout-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.onboard-layout-card').forEach(c => {
+          c.classList.remove('ring-2', 'ring-primary', 'bg-surface-container');
+          c.classList.add('bg-surface-container-low');
+          const b = c.querySelector('.layout-badge');
+          if (b) b.classList.add('hidden');
+        });
+        card.classList.add('ring-2', 'ring-primary', 'bg-surface-container');
+        card.classList.remove('bg-surface-container-low');
+        const badge = card.querySelector('.layout-badge');
+        if (badge) badge.classList.remove('hidden');
+        selectedLayout = card.getAttribute('data-layout-id') || 'A';
+      });
+    });
+
+    // One-Shot Generation Trigger
+    if (createBtn) {
+      createBtn.addEventListener('click', () => {
+        const promptText = (promptInput && promptInput.value.trim()) || '도심 스마트 루프탑 라운지';
+        const phone = (phoneInput && phoneInput.value.trim()) || '010-1234-5678';
+
+        // Collect selected crops
+        const selectedCrops = [];
+        document.querySelectorAll('.crop-checkbox:checked').forEach(cb => {
+          const name = cb.closest('label').querySelector('.truncate');
+          if (name) selectedCrops.push(name.textContent.trim());
+        });
+        if (selectedCrops.length === 0) selectedCrops.push('기능성 새싹인삼');
+
+        // Extract tenant name from prompt
+        let spaceType = '카페 유휴공간';
+        if (promptText.includes('식당')) spaceType = '로컬 식당';
+        else if (promptText.includes('베란다') || promptText.includes('홈')) spaceType = '베란다/홈가든';
+        else if (promptText.includes('창고') || promptText.includes('옥상') || promptText.includes('룸파밍')) spaceType = '옥상/창고 룸파밍';
+
+        let autoName = promptText.split('/')[0].trim();
+        if (autoName.length > 20) autoName = autoName.slice(0, 18) + '...';
+        if (!autoName || autoName.length < 2) autoName = '나만의 하이존 스마트팜';
+
+        // Modal for Animated Generation
+        openGenerationModal({
+          name: autoName,
+          space_type: spaceType,
+          intro_text: promptText,
+          theme_palette_id: selectedTheme,
+          layout_variant: selectedLayout,
+          phone: phone,
+          crop_names: selectedCrops
+        });
+      });
+    }
+  }
+
+  function openGenerationModal(tenantParams) {
+    const modal = document.getElementById('generation-modal');
+    const step1 = document.getElementById('gen-step-1');
+    const step2 = document.getElementById('gen-step-2');
+    const step3 = document.getElementById('gen-step-3');
+    const step4 = document.getElementById('gen-step-4');
+    const progressFill = document.getElementById('gen-progress-fill');
+
+    if (!modal) return;
+    modal.classList.remove('hidden');
+
+    // Reset steps
+    [step1, step2, step3, step4].forEach(s => {
+      if (s) {
+        s.querySelector('.material-symbols-outlined').textContent = 'hourglass_empty';
+        s.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-outline text-[18px]';
+        s.classList.add('opacity-50');
+      }
+    });
+
+    const markStepDone = (stepEl, icon = 'check_circle') => {
+      if (!stepEl) return;
+      stepEl.classList.remove('opacity-50');
+      const iconEl = stepEl.querySelector('.material-symbols-outlined');
+      iconEl.textContent = icon;
+      iconEl.className = 'material-symbols-outlined text-primary text-[18px]';
+    };
+
+    // Step 1: Input Analysis
+    if (progressFill) progressFill.style.width = '25%';
+    markStepDone(step1, 'sync');
+
+    setTimeout(() => {
+      markStepDone(step1, 'check_circle');
+      if (progressFill) progressFill.style.width = '50%';
+      markStepDone(step2, 'sync');
+
+      setTimeout(() => {
+        markStepDone(step2, 'check_circle');
+        if (progressFill) progressFill.style.width = '75%';
+        markStepDone(step3, 'sync');
+
+        setTimeout(() => {
+          markStepDone(step3, 'check_circle');
+          if (progressFill) progressFill.style.width = '100%';
+          markStepDone(step4, 'sync');
+
+          // Execute DB Insertion & Hook
+          try {
+            const { tenant, webhookLog } = db.createTenantOneShot(tenantParams);
+            markStepDone(step4, 'check_circle');
+
+            // Trigger Alimtalk Toast
+            setTimeout(() => {
+              modal.classList.add('hidden');
+
+              showAlimtalkToast({
+                title: '💬 [카카오 알림톡] 미니홈피 개설 완료',
+                tenant_name: tenant.name,
+                summary: `URL: https://hizone-garden.surge.sh/#/m/${tenant.slug}\n대표 작물: ${tenantParams.crop_names.join(', ')}`,
+                time: '방금 전'
+              });
+
+              // Navigate directly to the new mini-hompy!
+              navigate('hompy', { slug: tenant.slug });
+            }, 700);
+
+          } catch (err) {
+            alert('생성 실패: ' + err.message);
+            modal.classList.add('hidden');
+          }
+        }, 600);
+      }, 600);
+    }, 600);
+  }
+
+  // --- Webhook Logs & Admin Console Renderer ---
+  function renderWebhookLogs() {
+    const list = document.getElementById('webhook-logs-list');
+    const logs = db.getWebhookLogs();
+
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (logs.length === 0) {
+      list.innerHTML = `<p class="text-center text-outline py-8">기록된 웹훅 발송 로그가 없습니다.</p>`;
+      return;
+    }
+
+    logs.forEach(log => {
+      const card = document.createElement('div');
+      card.className = 'p-3.5 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container flex flex-col gap-2 mb-3';
+      const isComplete = log.trigger_type === 'generation_complete';
+
+      card.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded-full text-xs font-bold ${isComplete ? 'bg-primary/20 text-primary' : 'bg-amber-100 text-amber-900'}">
+              ${isComplete ? 'generation_complete (홈피 개설)' : 'new_event (신규 이벤트)'}
+            </span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">200 OK</span>
+          </div>
+          <span class="font-data-display text-[11px] text-outline">${new Date(log.attempted_at).toLocaleTimeString('ko-KR')}</span>
+        </div>
+        <div class="bg-surface-container-low rounded-lg p-2.5 font-data-display text-[12px] text-on-surface overflow-x-auto">
+          <pre class="whitespace-pre-wrap">${JSON.stringify(log.payload, null, 2)}</pre>
+        </div>
+        <div class="flex items-center justify-between text-xs text-on-surface-variant pt-1 border-t border-surface-container-low">
+          <span>재시도 횟수: <strong class="text-primary">${log.retry_count} / 3</strong></span>
+          <span>상태: <strong class="text-primary">${log.status}</strong></span>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  // --- Global Helper Handlers on Window ---
+  window.openMiniHompy = function (slug) {
+    navigate('hompy', { slug });
+  };
+
+  window.openKakaoChat = function (tenantName) {
+    const modal = document.getElementById('kakao-chat-modal');
+    const nameEl = document.getElementById('chat-tenant-name');
+    if (nameEl) nameEl.textContent = tenantName;
+    if (modal) modal.classList.remove('hidden');
+  };
+
+  window.closeKakaoChat = function () {
+    const modal = document.getElementById('kakao-chat-modal');
+    if (modal) modal.classList.add('hidden');
+  };
+
+  window.openOrderModal = function (tenantId, productName, price) {
+    const modal = document.getElementById('order-modal');
+    const title = document.getElementById('order-modal-title');
+    const priceEl = document.getElementById('order-modal-price');
+    const hiddenTenantId = document.getElementById('order-tenant-id');
+    const hiddenProdName = document.getElementById('order-product-name');
+
+    if (title) title.textContent = productName;
+    if (priceEl) priceEl.textContent = `${(price || 0).toLocaleString()}원`;
+    if (hiddenTenantId) hiddenTenantId.value = tenantId;
+    if (hiddenProdName) hiddenProdName.value = productName;
+
+    if (modal) modal.classList.remove('hidden');
+  };
+
+  window.closeOrderModal = function () {
+    const modal = document.getElementById('order-modal');
+    if (modal) modal.classList.add('hidden');
+  };
+
+  window.submitOrder = function (e) {
+    e.preventDefault();
+    const tenantId = document.getElementById('order-tenant-id').value;
+    const prodName = document.getElementById('order-product-name').value;
+    const buyerName = document.getElementById('order-buyer-name').value.trim() || '고객';
+    const buyerPhone = document.getElementById('order-buyer-phone').value.trim();
+
+    const { webhookLog } = db.orderProduct({
+      tenant_id: tenantId,
+      product_name: prodName,
+      buyer_name: buyerName,
+      phone: buyerPhone
+    });
+
+    window.closeOrderModal();
+
+    showAlimtalkToast({
+      title: '💬 [카카오 알림톡] 사장님께 주문 알림 전송',
+      tenant_name: webhookLog.payload.template_vars.tenant_name,
+      summary: `[${prodName}] ${buyerName}님의 주문이 접수되었습니다. (재시도 0/3)`,
+      time: '방금 전'
+    });
+  };
+
+  window.likeFeed = function (feedId, btn) {
+    const count = db.toggleLike(feedId);
+    const likeEl = btn.querySelector('.feed-likes');
+    if (likeEl) likeEl.textContent = count;
+  };
+
+  window.likeComment = function (feedId, btn) {
+    const count = db.toggleLike(feedId);
+    const likeEl = btn.querySelector('.like-cnt');
+    if (likeEl) likeEl.textContent = count;
+  };
+
+  window.resetFilters = function () {
+    activeCropFilter = 'all';
+    activeSpaceFilter = 'all';
+    searchQuery = '';
+    const searchInput = document.getElementById('portal-search-input');
+    if (searchInput) searchInput.value = '';
+
+    document.querySelectorAll('#cropFilterContainer button').forEach((b, idx) => {
+      b.classList.toggle('bg-primary', idx === 0);
+      b.classList.toggle('text-on-primary', idx === 0);
+      b.classList.toggle('bg-surface-container', idx !== 0);
+      b.classList.toggle('text-on-surface-variant', idx !== 0);
+    });
+
+    document.querySelectorAll('#spaceFilterContainer button').forEach((b, idx) => {
+      b.classList.toggle('bg-secondary-container', idx === 0);
+      b.classList.toggle('text-on-secondary-container', idx === 0);
+      b.classList.toggle('bg-surface-container-high', idx !== 0);
+      b.classList.toggle('text-on-surface-variant', idx !== 0);
+    });
+
+    renderPortalFeed();
+  };
+
+  // --- Initial Setup & Listeners ---
+  function init() {
+    // Navigation bar click listeners
+    navItems.forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        const path = item.getAttribute('data-path');
+        navigate(path);
+      });
+    });
+
+    // Search bar live filter
+    const searchInput = document.getElementById('portal-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', e => {
+        searchQuery = e.target.value;
+        renderPortalFeed();
+      });
+    }
+
+    // Crop filter chips
+    const cropButtons = document.querySelectorAll('#cropFilterContainer button');
+    cropButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        cropButtons.forEach(b => {
+          b.classList.remove('bg-primary', 'text-on-primary');
+          b.classList.add('bg-surface-container', 'text-on-surface-variant');
+        });
+        btn.classList.add('bg-primary', 'text-on-primary');
+        btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+
+        activeCropFilter = btn.getAttribute('data-crop') || 'all';
+        renderPortalFeed();
+      });
+    });
+
+    // Space filter chips
+    const spaceButtons = document.querySelectorAll('#spaceFilterContainer button');
+    spaceButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        spaceButtons.forEach(b => {
+          b.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+          b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+        });
+        btn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+        btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+
+        activeSpaceFilter = btn.getAttribute('data-space') || 'all';
+        renderPortalFeed();
+      });
+    });
+
+    // Guestbook submission
+    const guestbookForm = document.getElementById('guestbook-form');
+    const guestbookInput = document.getElementById('guestbook-input');
+    const charCounter = document.getElementById('char-counter');
+
+    if (guestbookInput && charCounter) {
+      guestbookInput.addEventListener('input', e => {
+        const len = e.target.value.length;
+        charCounter.textContent = `${len} / 120자`;
+      });
+    }
+
+    if (guestbookForm && guestbookInput) {
+      guestbookForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const text = guestbookInput.value.trim();
+        if (!text) return;
+
+        const tenant = db.getTenantBySlug(currentTenantSlug);
+        if (!tenant) return;
+
+        const res = db.addComment({
+          tenant_id: tenant.id,
+          author: '방문자',
+          text
+        });
+
+        guestbookInput.value = '';
+        if (charCounter) charCounter.textContent = '0 / 120자';
+
+        renderGuestbook(tenant.id);
+
+        showAlimtalkToast({
+          title: '💬 [카카오 알림톡] 사장님께 방명록 알림 전송',
+          tenant_name: tenant.name,
+          summary: `새 댓글: "${text.slice(0, 25)}..."\n발송 상태: 성공 (재시도 0/3)`,
+          time: '방금 전'
+        });
+      });
+    }
+
+    // Tenant Switcher dropdown listener
+    const tenantSelector = document.getElementById('tenant-switcher-dropdown');
+    if (tenantSelector) {
+      tenantSelector.addEventListener('change', e => {
+        currentTenantSlug = e.target.value;
+        renderMiniHompy(currentTenantSlug);
+      });
+    }
+
+    // Minihompy Layout switcher buttons (A / B / C)
+    document.querySelectorAll('.layout-switch-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const variant = btn.getAttribute('data-variant');
+        const tenant = db.getTenantBySlug(currentTenantSlug);
+        if (tenant) {
+          tenant.layout_variant = variant;
+          db.save();
+          applyLayoutVariant(variant);
+
+          document.querySelectorAll('.layout-switch-btn').forEach(b => {
+            b.classList.toggle('bg-primary', b === btn);
+            b.classList.toggle('text-on-primary', b === btn);
+            b.classList.toggle('bg-surface-container', b !== btn);
+            b.classList.toggle('text-on-surface-variant', b !== btn);
+          });
+        }
+      });
+    });
+
+    // Minihompy Media tab switcher
+    const tabPhotos = document.getElementById('media-tab-photos');
+    const tabVideos = document.getElementById('media-tab-videos');
+    const photoGrid = document.getElementById('media-photos-grid');
+    const videoGrid = document.getElementById('media-videos-grid');
+
+    if (tabPhotos && tabVideos) {
+      tabPhotos.addEventListener('click', () => {
+        tabPhotos.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        tabPhotos.classList.remove('text-on-surface-variant');
+        tabVideos.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        tabVideos.classList.add('text-on-surface-variant');
+        if (photoGrid) photoGrid.classList.remove('hidden');
+        if (videoGrid) videoGrid.classList.add('hidden');
+      });
+
+      tabVideos.addEventListener('click', () => {
+        tabVideos.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        tabVideos.classList.remove('text-on-surface-variant');
+        tabPhotos.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        tabPhotos.classList.add('text-on-surface-variant');
+        if (videoGrid) videoGrid.classList.remove('hidden');
+        if (photoGrid) photoGrid.classList.add('hidden');
+      });
+    }
+
+    // Setup Onboarding Engine
+    setupOnboardingEngine();
+
+    // Hash router listener
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+  }
+
+  // Launch on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+</body>
+</html>

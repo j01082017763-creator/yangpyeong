@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38" fill="none">
+  <rect x="1" y="1" width="108" height="36" rx="12" fill="#EAF5EF" stroke="#0F4A36" stroke-opacity="0.25" stroke-width="1.2"/>
+  <!-- Garden Icon -->
+  <circle cx="20" cy="19" r="10" fill="#0A3D2C"/>
+  <path d="M20 13C18 16 15 18 13 21C11 24 13 26 16 26C19 26 19 24 20 22C21 24 21 26 24 26C27 26 29 24 27 21C25 18 22 16 20 13Z" fill="#A7F3D0"/>
+  <!-- Text -->
+  <text x="36" y="24" font-family="'Noto Sans KR', sans-serif" font-weight="800" font-size="12" fill="#0A3D2C" letter-spacing="-0.3">하이존 가든</text>
+</svg>

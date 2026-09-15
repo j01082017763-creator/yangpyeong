@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&amp;family=Noto+Serif:wght@600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {"darkMode": "class","theme": {"extend": {"colors": {"outline-variant": "#bfc9c1","surface-tint": "#1e6b4f","error-container": "#ffdad6","tertiary": "#00523a","surface-bright": "#f9f9ff","secondary-fixed": "#ffe08e","outline": "#6f7973","surface": "#f9f9ff","background": "#f9f9ff","secondary-fixed-dim": "#ecc246","inverse-primary": "#8cd5b3","on-secondary-container": "#735a00","on-tertiary-container": "#99eac6","on-primary-container": "#9fe9c5","primary-fixed": "#a8f2ce","secondary": "#755b00","primary": "#005239","surface-container-high": "#dee8ff","surface-container": "#e7eeff","surface-dim": "#d0daf0","on-secondary-fixed": "#241a00","primary-container": "#1f6b4f","on-tertiary": "#ffffff","on-error-container": "#93000a","surface-container-highest": "#d9e3f9","tertiary-container": "#136c4f","primary-fixed-dim": "#8cd5b3","error": "#ba1a1a","on-tertiary-fixed": "#002115","tertiary-fixed": "#a2f3ce","tertiary-fixed-dim": "#87d6b3","secondary-container": "#fed255","on-secondary": "#ffffff","inverse-on-surface": "#ebf1ff","on-primary-fixed-variant": "#005139","on-surface-variant": "#3f4943","on-error": "#ffffff","on-tertiary-fixed-variant": "#00513a","on-surface": "#121c2c","on-secondary-fixed-variant": "#584400","surface-variant": "#d9e3f9","surface-container-lowest": "#ffffff","on-primary-fixed": "#002115","on-background": "#121c2c","inverse-surface": "#273141","surface-container-low": "#f0f3ff","on-primary": "#ffffff"},"borderRadius": {"DEFAULT": "0.125rem","lg": "0.25rem","xl": "0.5rem","full": "0.75rem"},"spacing": {"gutter-desktop": "2rem","gutter-tablet": "1.5rem","space-xs": "0.5rem","gutter-mobile": "1rem","space-lg": "1.5rem","space-md": "1rem","space-sm": "0.75rem","space-xl": "2rem","space-xxs": "0.25rem","space-4xl": "6rem","space-2xl": "3rem","container-max-width": "1280px","space-3xl": "4.5rem"},"fontFamily": {"headline-md": ["Noto Serif"],"body-lg": ["Noto Sans"],"body-md": ["Noto Sans"],"display-lg-mobile": ["Noto Serif"],"headline-sm": ["Noto Sans"],"label-md": ["Noto Sans"],"headline-lg": ["Noto Serif"],"label-lg": ["Noto Sans"],"body-sm": ["Noto Sans"],"label-sm": ["Noto Sans"],"display-lg": ["Noto Serif"],"headline-lg-mobile": ["Noto Serif"]},"fontSize": {"headline-md": ["24px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600"}],"body-lg": ["16px", {"lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "400"}],"body-md": ["14px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],"display-lg-mobile": ["32px", {"lineHeight": "42px", "letterSpacing": "-0.015em", "fontWeight": "600"}],"headline-sm": ["18px", {"lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "600"}],"label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],"headline-lg": ["32px", {"lineHeight": "44px", "letterSpacing": "-0.015em", "fontWeight": "600"}],"label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],"body-sm": ["12px", {"lineHeight": "20px", "letterSpacing": "0.005em", "fontWeight": "400"}],"label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}],"display-lg": ["48px", {"lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "600"}],"headline-lg-mobile": ["26px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-xs"><div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">agriculture</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none">지상천국 스마트팜</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none mt-1">공동체마을 위원회</span></div></div><div class="flex items-center gap-space-xs"><a class="min-h-[44px] px-space-sm py-space-xxs flex items-center gap-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md transition-colors" data-path="proposal-download" href="#"><span class="material-symbols-outlined text-[18px]">download</span><span>제안서</span></a><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK2cH_ruS-VtL9bEqihrhHSt50X0r_vIlpGhp84xcuSROwdkdGWY09uE8TfEeJyWfWKNLPZvHU3tpiQZlLoYaWbVLtLLV1ZJIB_Yfu__Gi8ORSz-FlgiMbd4jdVLgaJN3YckLwnbgAxt7Gj0juorqJ3Hel8Rc_fsIKpFo7fGI_5T1B8jG03WKVxBV8ub9ciwC0t2y5g3Wa9ILYNMkQuJfm5VL9KCcw4Nu95gh7sqiCs3keo-wuamk"/></div></div></header><main class="flex flex-col relative w-full pt-16 pb-20 bg-surface"><div class="flex flex-col w-full">
+<!-- 1. HERO SECTION -->
+<section class="relative px-gutter-mobile pt-space-md pb-space-2xl">
+<div class="relative overflow-hidden rounded-xl shadow-xl bg-primary">
+<img alt="양평 지상천국 스마트팜 대형 유리온실 전경" class="w-full h-[460px] object-cover mix-blend-overlay opacity-55 scale-105 transition-transform duration-700 hover:scale-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6GMvpfaxCfWEs3G4h5n1RbxrNdqa4Occ2fiitRE-hV5EnmkE4XUSzbn5Zj3DQ3bdlvOGD8E692JktHAWcPz3OM0R_PMCl3zMgKYoC_UdTUMqdRVUMD80X72L6lx7TNjQ-RrTb9v_T5-0W8xx2dtnxsWKge5_BfvF9MEIz0K_pSFcuo8ds8zRUXcj5ZBwH2sJ9ieVWQhffnwSsz7eHFajl0ogfqywTi4-gOWTrTbABKgVYC4_TdhM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface via-primary/60 to-transparent"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-space-lg text-on-primary">
+<div class="inline-flex items-center gap-1.5 self-start px-space-sm py-space-xxs rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm shadow-sm">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>양평 궁을행복요양원 부지 재생 프로젝트</span>
+</div>
+<h1 class="mt-space-sm font-headline-lg-mobile text-headline-lg-mobile text-surface-bright tracking-tight leading-snug">
+          지상천국,<br/>이 땅 위에 짓다
+        </h1>
+<p class="mt-space-xs font-body-sm text-body-sm text-inverse-on-surface line-clamp-3 opacity-90 leading-relaxed">
+          기존 요양원 유휴 부지의 생명력 넘치는 전환 — 최첨단 친환경 스마트팜과 영성 치유 공동체가 어우러진 미래형 자립 마을 마스터플랜.
+        </p>
+<!-- Metrics Badges -->
+<div class="grid grid-cols-3 gap-space-xs mt-space-md pt-space-xs border-t border-inverse-on-surface/20">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-inverse-primary">총 대지면적</span>
+<span class="font-headline-sm text-headline-sm text-surface-bright font-semibold">3,471평</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary-fixed">스마트 온실</span>
+<span class="font-headline-sm text-headline-sm text-surface-bright font-semibold">2,000평</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-inverse-primary">운영 모델</span>
+<span class="font-headline-sm text-headline-sm text-surface-bright font-semibold">자립공동체</span>
+</div>
+</div>
+<!-- Primary Executive Action Button -->
+<a class="mt-space-lg w-full flex items-center justify-center gap-space-xs min-h-[48px] py-space-sm px-space-lg rounded-xl bg-secondary-fixed text-on-secondary-fixed font-label-lg text-label-lg font-semibold shadow-md active:scale-98 transition-all hover:bg-secondary-fixed-dim" href="#executive-inquiry">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+<span>이사회 제안서 요약본 열람 (PDF)</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 2. VISION & CORE PILLARS SECTION -->
+<section class="px-gutter-mobile py-space-xl flex flex-col gap-space-md">
+<div class="flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-surface-tint tracking-wider uppercase font-semibold">Our Strategic Foundations</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">우리가 구현할<br/>지상천국의 3대 가치</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">자연 순환 생태계와 자립형 경제를 완성하는 유기적 핵심 축</p>
+</div>
+<div class="grid grid-cols-1 gap-space-md mt-space-xs">
+<!-- Pillar 01 -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-space-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-headline-sm text-headline-sm">01</span>
+<span class="material-symbols-outlined text-surface-tint text-[24px]">groups</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mt-space-xxs">경로·청년 상생 공동체</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          어르신의 경륜과 청년의 첨단 기술력이 결합된 협동 주거 모델입니다. 기존 본관 시설을 리모델링하여 세대 통합 교육, 영성 명상 쉼터 및 안락한 생활 주거를 제공합니다.
+        </p>
+<div class="mt-space-xs flex items-center gap-space-xs text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>주거·돌봄·사회적 일자리 유기적 통합</span>
+</div>
+</div>
+<!-- Pillar 02 -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-space-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="w-8 h-8 rounded-lg bg-tertiary-container text-on-tertiary flex items-center justify-center font-headline-sm text-headline-sm">02</span>
+<span class="material-symbols-outlined text-tertiary text-[24px]">precision_manufacturing</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-tertiary mt-space-xxs">첨단 6차 스마트팜 혁신</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          ICT 사물인터넷 복합 환경제어, 버티컬 수경재배, 아쿠아포닉스를 도입합니다. 외부 기후와 무관하게 연중 365일 고부가 친환경 무농약 채소를 수확해 재단 기금의 안정성을 확보합니다.
+        </p>
+<div class="mt-space-xs flex items-center gap-space-xs text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>연중 표준 생산량 확보 및 자립 재무 모델</span>
+</div>
+</div>
+<!-- Pillar 03 -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-space-xs relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="w-8 h-8 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center font-headline-sm text-headline-sm">03</span>
+<span class="material-symbols-outlined text-secondary text-[24px]">local_cafe</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-secondary mt-space-xxs">온실 치유 &amp; 로컬 상생 마켓</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          유리온실 정원 카페, 팜투테이블 베이커리, 직판 로컬 마켓을 통해 도시민과 지역 주민이 방문하는 양평 대표 생태 랜드마크로 확장합니다.
+        </p>
+<div class="mt-space-xs flex items-center gap-space-xs text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>방문객 연 15만 명 유입 및 지역 경제 기여</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. SITE OVERVIEW & TOPOGRAPHY -->
+<section class="px-gutter-mobile py-space-xl bg-surface-container-lowest">
+<div class="flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-surface-tint font-semibold tracking-wider uppercase">Strategic Land Asset</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">사업 부지 실측 및 입지 분석</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        양평군 여양2로 소재, 천혜의 배산임수 지형과 기존 복지시설 골조 인프라의 가치
+      </p>
+</div>
+<!-- Survey Map Embed Card -->
+<div class="mt-space-md rounded-xl overflow-hidden bg-surface-container shadow-md">
+<div class="relative">
+<img alt="양평 궁을행복요양원 실측 11,476.7제곱미터 지적 경계 항공사진" class="w-full h-[260px] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCafQoecgojEnNOQ9a0nTjRPtRsKT4wXpDUlOiFo878DsiPe3VzF_c3kNZvjnco6bH38Bbse55QaRG5164rh2gwXipzVOCy6Fdh2wWeCeV9xRNTs_KKHaI9TwT-rCPrlN_ufnWlztXN1dBidG8SYpQQP7I13ypsaRZjH94KZ-bqyf4MViKRy96OSD5Lpxz9pr556F4HzLLEhJtoUlOvHueGP23ZPpx5j2OwvvAl8YQUmhbWSdcSiTYVzSN7mLz_yq8Y"/>
+<div class="absolute bottom-3 left-3 bg-surface-bright/90 backdrop-blur-md px-space-sm py-space-xxs rounded-lg shadow-sm">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error"></span> 실측 지적 확정경계
+          </span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-sm">
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant">총 대지 면적</span>
+<div class="font-headline-sm text-headline-sm text-primary mt-0.5 font-bold">11,477 ㎡</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">약 3,471평</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant">온실 및 체험동</span>
+<div class="font-headline-sm text-headline-sm text-secondary mt-0.5 font-bold">6,610 ㎡</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">약 2,000평 계획</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant">대지 외곽 둘레</span>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold">440.7 m</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">완만한 완경사 지형</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant">수도권 접근성</span>
+<div class="font-headline-sm text-headline-sm text-surface-tint mt-0.5 font-bold">50 분</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">서울·잠실 직통 도로망</span>
+</div>
+</div>
+<!-- Asset Revitalization Insight -->
+<div class="p-space-md rounded-lg bg-surface-container-high flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-surface-tint text-[22px] shrink-0 mt-0.5">architecture</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">기존 본관동(B1~3F) 구조 재활용</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 leading-relaxed">
+              안전진단 완료된 철근 콘크리트 골조를 100% 보존·재활용하여 신축 대비 <strong>약 42% 이상의 공사비 절감</strong>과 공기 단축 효과를 달성합니다.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. SMART FARM INNOVATION SYSTEMS -->
+<section class="px-gutter-mobile py-space-xl flex flex-col gap-space-md">
+<div class="flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-surface-tint font-semibold tracking-wider uppercase">High-Tech Agrotechnology</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">스마트 농업 4대 핵심 모델</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">연중 기후 영향 없는 정밀 자동화 환경 구축</p>
+</div>
+<div class="grid grid-cols-1 gap-space-md">
+<!-- Method 1: Hydroponics -->
+<div class="rounded-xl overflow-hidden bg-surface-container-lowest shadow-sm">
+<img class="w-full h-44 object-cover" data-alt="Modern clean vertical hydroponic green salad towers inside an expansive sunny greenhouse in Yangpyeong, lush vibrant organic greens growing under automated misting system with deep green ambient illumination and wooden beams." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE05TIgtiCb6J0q2uNhoy9jrbX1VRnZBpAZY-gm4iPHUER18uL-QBDe5SIb3ivwtKX672_Znn9fMy0ljflIOyHfNP0xBWPGiQqfzM7gibVW5AFRPBjlj3pS6CT-TpV8rUlFal-fy8HwJeowO7yuxSGCXF60H4wabd6Jix_Gdad3wqiLaXtZGFEUNrbnTNew0Q3a24BSiaThV3fIWvI3q7fG0m62gPyS-B1uNjiiSKKuY6Jz1XVSRo"/>
+<div class="p-space-md flex flex-col gap-space-xxs">
+<div class="flex items-center justify-between">
+<h4 class="font-headline-sm text-headline-sm text-primary">버티컬 수경재배 타워</h4>
+<span class="px-space-xs py-space-xxs bg-primary-container text-on-primary rounded-full font-label-sm text-label-sm">생산성 5배</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            노지 재배 대비 토지 이용 효율을 극대화하여 유럽형 고급 쌈채소(버터헤드, 로메인)를 무농약으로 대량 생산합니다.
+          </p>
+</div>
+</div>
+<!-- Method 2: Aquaponics -->
+<div class="rounded-xl overflow-hidden bg-surface-container-lowest shadow-sm">
+<img class="w-full h-44 object-cover" data-alt="Eco-friendly closed-loop aquaponics setup inside a modern glass greenhouse, showing clear water tanks with healthy swimming tilapia below lush green organic leafy plants floating on nutrient biobeds, sunbeams streaming through glass." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEgUD6akmnEbOaX_H11ZBeeRZIFr75g_sNytAeVoXm10kUK9xevh03OkcjNoEjmgtOMn_loCdjIuG_kgKxXYhvZBkPaWMelLA6QjJc8eTXOVeOyHNvvf12Dlb5FUHXpmo7fovuzRKu3Mo3t97gFJL12GrGkaGLuzhLx2gPlUaDjMRaBqyQs-LsbfcEJYEP4zwms6yIB23g9wY1_2pHX3XAcv_pBamttE0pK0Jn7PZHLmDtj4QbvPs"/>
+<div class="p-space-md flex flex-col gap-space-xxs">
+<div class="flex items-center justify-between">
+<h4 class="font-headline-sm text-headline-sm text-tertiary">생태 아쿠아포닉스 순환</h4>
+<span class="px-space-xs py-space-xxs bg-tertiary-container text-on-tertiary rounded-full font-label-sm text-label-sm">무화학비료</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            어류 양식수를 미생물로 분해하여 작물의 천연 양분으로 순환시키는 100% 무화학비료 친환경 유기농법입니다.
+          </p>
+</div>
+</div>
+<!-- Method 3: Specialty Potted -->
+<div class="rounded-xl overflow-hidden bg-surface-container-lowest shadow-sm">
+<img class="w-full h-44 object-cover" data-alt="High quality rows of potted organic medicinal herbs, bonsai trees, and high-sugar strawberry plants in raised greenhouse benches with automated drip irrigation tubes under warm daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOoNTfr9xAW-cBTSRU3F5kJchnC-NNsuyBgHBtbrMlz5OmwAQQqMtzHkPMxxjyt0RtwAAqU7ry-PTMpAtQO4S54wBQTpcR8hKJQgJZWsdeizaTXV4TEI3NM2K8bV6xBZdokpRZavZuzLSjeWlpe5CTFMrggpkQ-eTSk-EYASfhgToSa2UH3-gmQhYNPCK22C0mPAQr5pndCZzWRKFsVIdXHMgz-iaIrs4-CW3QFcT5pLbaibVUWME"/>
+<div class="p-space-md flex flex-col gap-space-xxs">
+<div class="flex items-center justify-between">
+<h4 class="font-headline-sm text-headline-sm text-secondary">특용 약용허브 &amp; 고당도 과채</h4>
+<span class="px-space-xs py-space-xxs bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">고수익 작물</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            고부가가치 천도교 전통 약초, 분재, 사계절 프리미엄 딸기를 스마트 드립 관수 시스템으로 정밀 재배합니다.
+          </p>
+</div>
+</div>
+<!-- Method 4: AI Telemetry & Robots -->
+<div class="rounded-xl overflow-hidden bg-surface-container-lowest shadow-sm">
+<img class="w-full h-44 object-cover" data-alt="Small automated guided transport robot carrying harvested vegetable crates down a clean aisle of an automated glass greenhouse, with digital telemetry sensor displays visible in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAghLQTHbFs6RC53o3awX7Q3uziBrb_pXtVoCIa0npNGRpBe9CsbrCo2c7rKvVRW4vbKt56eBZmlccUC_QT220n7oM9iTx-KkovopSqpbwUBJQEx6kvZ3eGa3d86dhUIBk4_663bkcPNg66AG3KR2hnf2QJ3qwcsKS15ZqGzMhxfHRdZXAlgxWvvhHep54n9DU1_yEm9IayHhITMn5mSHuVwajIv6y6aZN5LMSR-nuTFMQEaKv36o0"/>
+<div class="p-space-md flex flex-col gap-space-xxs">
+<div class="flex items-center justify-between">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">로봇 지원 &amp; AI 원격 관제</h4>
+<span class="px-space-xs py-space-xxs bg-surface-container-highest text-on-surface rounded-full font-label-sm text-label-sm">노동력 70% 경감</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            어르신 조합원도 손쉽게 파종·수확에 동참할 수 있도록 스마트 무인 운반 로봇과 자동 온·습도 조절 센서를 지원합니다.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. GREENHOUSE LIFESTYLE & MARKET -->
+<section class="px-gutter-mobile py-space-xl bg-surface-container-low">
+<div class="flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-secondary font-semibold tracking-wider uppercase">Farm-To-Table Destination</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">온실 속 카페 &amp; 로컬 마켓</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        싱그러운 흙내음과 커피 향이 머무는 열린 커뮤니티
+      </p>
+</div>
+<!-- Lifestyle Feature Box -->
+<div class="mt-space-md rounded-xl overflow-hidden bg-surface-container-lowest shadow-md">
+<img class="w-full h-52 object-cover" data-alt="Interior of a sun-filled modern botanical greenhouse cafe with natural wooden tables, family visitors enjoying fresh organic green salads and herbal drinks surrounded by flowering tropical plants and hanging indoor greenery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr-B5K08t-EIStPl1wzOaf4c1HyDu-04GLLZMGnpFW1yEC2q4MMPWUyQ814eq-7mduxxpaOKl8rJAiGT6IaktCViVMiaQNu0ZJ9EHQMznIzbpkhorZh7aNMheZTXF-Dnia3zbSfXYxA3AwI-VQCrV8jImaJgYRIXnCNHs6l0s22lGE_RqfPGaWKs1K8NGUZPT7_5wjJgDOvjQMcpicLLszYblB9geGWQ90uwGoTgybB7dPN6g5OtY"/>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">수확 30분 만에 맛보는 샐러드바</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              온실에서 갓 채취한 유기농 채소로 조리하는 신선한 브런치와 건강 베이커리를 제공합니다.
+            </p>
+</div>
+</div>
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">양평 무농약 로컬푸드 직판 마켓</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              인근 양평 농민의 특산물과 마을에서 가공한 천연 가공식품을 유통 마진 없이 정직하게 판매합니다.
+            </p>
+</div>
+</div>
+<div class="flex items-start gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">spa</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">사계절 썬룸 명상 &amp; 힐링 라운지</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              겨울에도 따사로운 자연 채광 아래 잔잔한 클래식 음악과 함께 심신의 피로를 씻어내는 영성 쉼터입니다.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. COMMUNITY REVITALIZATION (REMODELED NURSING HOME) -->
+<section class="px-gutter-mobile py-space-xl flex flex-col gap-space-md">
+<div class="flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-surface-tint font-semibold tracking-wider uppercase">Facility Renovation Masterplan</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">기존 요양원 시설의 품격 있는 재탄생</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">폐쇄적 병동에서 열린 온기 가득한 친환경 공동체 주거로</p>
+</div>
+<!-- Renovation Plan Interactive Tabs -->
+<div class="flex gap-space-xs p-1 bg-surface-container rounded-lg" id="reno-tabs">
+<button class="flex-1 py-space-xs rounded font-label-md text-label-md bg-surface-bright text-primary font-semibold shadow-sm transition-all" id="btn-living" onclick="switchTab('living')">
+        공동체 주거동
+      </button>
+<button class="flex-1 py-space-xs rounded font-label-md text-label-md text-on-surface-variant transition-all" id="btn-corridor" onclick="switchTab('corridor')">
+        식물벽 회랑
+      </button>
+<button class="flex-1 py-space-xs rounded font-label-md text-label-md text-on-surface-variant transition-all" id="btn-hall" onclick="switchTab('hall')">
+        나눔 식당·강당
+      </button>
+</div>
+<!-- Tab Panels -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-space-sm" id="tab-living">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined">bedroom_parent</span>
+<h4 class="font-headline-sm text-headline-sm font-semibold">1인 및 가족형 자립 주거 유닛 (지상 2~3층)</h4>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        과거 4~6인실 병실 구조를 전면 철거하여 개별 프라이버시가 완벽히 보장되는 원룸 및 패밀리 스위트 36세대로 개조합니다. 단열 보강과 친환경 황토 미장, 편백나무 마감으로 건강한 주거 환경을 만듭니다.
+      </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="px-space-xs py-space-xxs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">전용 욕실 및 테라스</span>
+<span class="px-space-xs py-space-xxs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">비상 긴급케어 센서</span>
+<span class="px-space-xs py-space-xxs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">친환경 목재 바닥</span>
+</div>
+</div>
+<div class="hidden p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-space-sm" id="tab-corridor">
+<div class="flex items-center gap-space-xs text-tertiary">
+<span class="material-symbols-outlined">forest</span>
+<h4 class="font-headline-sm text-headline-sm font-semibold">바이오필릭 실내 산책 복도 (Plant Corridor)</h4>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        어두웠던 기존 복도를 쾌적한 실내 수목 산책로로 변모시킵니다. 천창 자연 채광과 수직 벽면 녹화를 통해 미세먼지 없는 청정 산소를 공급하며, 날씨에 구애받지 않고 안전한 실내 운동이 가능합니다.
+      </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="px-space-xs py-space-xxs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">천연 공기정화 필터링</span>
+<span class="px-space-xs py-space-xxs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">보행 보조 안전 핸드레일</span>
+</div>
+</div>
+<div class="hidden p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-space-sm" id="tab-hall">
+<div class="flex items-center gap-space-xs text-secondary">
+<span class="material-symbols-outlined">local_dining</span>
+<h4 class="font-headline-sm text-headline-sm font-semibold">열린 나눔식당 &amp; 인문학 강당 (지하 1층~1층)</h4>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        입주민 전원이 함께 모여 직접 재배한 유기농 식단으로 한 끼를 나누는 대형 다이닝 홀과 정기 교양 강연, 재단 총회 및 영성 문화 행사를 개최할 수 있는 200석 규모의 다목적 홀을 조성합니다.
+      </p>
+<div class="flex flex-wrap gap-space-xs pt-space-xs">
+<span class="px-space-xs py-space-xxs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">200인 수용 음향·스크린</span>
+<span class="px-space-xs py-space-xxs bg-surface-container-high rounded text-on-surface font-label-sm text-label-sm">공용 오픈 키친</span>
+</div>
+</div>
+</section>
+<!-- 7. OUTDOOR HEALING & NATURE RETREAT -->
+<section class="px-gutter-mobile py-space-xl bg-surface-container-lowest">
+<div class="flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-surface-tint font-semibold tracking-wider uppercase">Nature-Based Therapy</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">자연 속 치유 야외 공간</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">개울과 숲이 어우러진 힐링 산책로 &amp; 가든 바비큐</p>
+</div>
+<div class="mt-space-md grid grid-cols-1 gap-space-md">
+<div class="rounded-xl overflow-hidden bg-surface-container shadow-sm flex flex-col">
+<img class="w-full h-44 object-cover" data-alt="Tranquil outdoor wooden boardwalk trail winding along a clear natural brook and restored ecological lotus pond in Yangpyeong, surrounded by pine trees, wildflowers, and soft evening lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEbep5yHrpwkjBur3wa7JOD0WW_T8A5ivfOnXYYV2N1Bv2NzI94vhzNsBR2cxwt29hhYad-FT80hHFtH63h9Pveo3qQOy_XI2gU0NA5zUjny8WjSu4ZLfRrmYM8lzKK2BpDwLNn1c8yvrJBkKdIV49a_BFM24M9keRfBrqE6p4x9WYuQoUk5LISlTZlB8E-143bmeAswuL941cCG7jGRsU52FuAk5BibOzWPKbiQdjpFh3WaSyl-4"/>
+<div class="p-space-md flex flex-col gap-space-xxs">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">자연 생태 연못 &amp; 맨발 황톳길</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            단지 북측 계류 수원을 활용한 생태 습지에서 수서 생물을 관찰하고, 400m 순환 어싱(Earthing) 황톳길로 혈액순환과 면역력을 회복합니다.
+          </p>
+</div>
+</div>
+<div class="rounded-xl overflow-hidden bg-surface-container shadow-sm flex flex-col">
+<img class="w-full h-44 object-cover" data-alt="Cozy outdoor wooden deck barbecue and glamping relaxation zone nestled in the forest edge of Yangpyeong, with warm string lights glowing over happy multigenerational families enjoying dinner outdoors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjfFPqKv4crW9J0G7VKD7mxj0ZDHNbRkXO1S-Ws6MkLcm4VGpNMi8l3mq7es9NR76BI-ugKmi8HPl5CjCxWuSMeUKLAdNlQVWdhEbBzPsD0p2NnTW-pL9kbdRw2mQeuSJ2g7jdT7XoCpjMzWZIaUPQqLgfF0nl60WdVHqXrRnne5SWAVUA3niqNt8ZXT_JH77_KVzltaB7njS1BjK2obsvDYZ93A6p5ft_NvzASTR6MeLBHcLRU4g"/>
+<div class="p-space-md flex flex-col gap-space-xxs">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">가든 바비큐 덱 &amp; 힐링 캠프 쉼터</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            주말 방문 가족 및 청년 조합원들이 화기애애하게 친교를 다질 수 있는 야외 잔디 마당과 글램핑 텐트존을 운영합니다.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 8. PROJECT ROADMAP -->
+<section class="px-gutter-mobile py-space-xl flex flex-col gap-space-md">
+<div class="flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-surface-tint font-semibold tracking-wider uppercase">Strategic Implementation</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">단계별 4단계 추진 로드맵</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">철저한 인허가 검증과 단계별 자립 재무 확립 플랜</p>
+</div>
+<!-- Timeline Steps -->
+<div class="relative pl-6 flex flex-col gap-space-lg before:content-[''] before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant">
+<!-- Step 1 -->
+<div class="relative flex flex-col gap-space-xxs">
+<span class="absolute -left-6 top-1 w-5 h-5 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-[10px] font-bold">1</span>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-bold">준비 및 인허가 확정</span>
+<span class="px-space-xs py-space-xxs bg-primary-container/20 text-primary rounded font-label-sm text-label-sm">2026. Q4</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          부지 정밀 실측, 농지/복지시설 용도변경 심의, 천도교 재단 이사회 최종 의결 및 SPC 법인 발족.
+        </p>
+</div>
+<!-- Step 2 -->
+<div class="relative flex flex-col gap-space-xxs">
+<span class="absolute -left-6 top-1 w-5 h-5 rounded-full bg-surface-tint text-on-primary flex items-center justify-center text-[10px] font-bold">2</span>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-surface-tint font-bold">기반 시설 &amp; 본관 리모델링</span>
+<span class="px-space-xs py-space-xxs bg-surface-container-high text-on-surface-variant rounded font-label-sm text-label-sm">2027. Q1~Q2</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          기존 요양원 구조 보강, 주거형 유닛 개조, 진입로 및 용수 배관 인프라 착공, 온실 1차 터파기.
+        </p>
+</div>
+<!-- Step 3 -->
+<div class="relative flex flex-col gap-space-xxs">
+<span class="absolute -left-6 top-1 w-5 h-5 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center text-[10px] font-bold">3</span>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-tertiary font-bold">스마트 온실 구축 &amp; 시범 입주</span>
+<span class="px-space-xs py-space-xxs bg-tertiary-fixed text-on-tertiary-fixed rounded font-label-sm text-label-sm">2027. Q3</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          유리온실 1,000평 설비 가동, 수경재배 파종 개시, 공동체 조합원 1기 입주 및 온실 카페 시범 운영.
+        </p>
+</div>
+<!-- Step 4 -->
+<div class="relative flex flex-col gap-space-xxs">
+<span class="absolute -left-6 top-1 w-5 h-5 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[10px] font-bold">4</span>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-secondary font-bold">그랜드 오픈 &amp; 전국 확산</span>
+<span class="px-space-xs py-space-xxs bg-secondary-fixed text-on-secondary-fixed rounded font-label-sm text-label-sm">2027. Q4 ~</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          로컬푸드 직판장 공식 개장, 조합원 배당 실현 및 2단계 1,000평 온실 추가 증축으로 전국 선도 롤모델 확립.
+        </p>
+</div>
+</div>
+</section>
+<!-- 9. CONTACT & BOARD INQUIRY EXECUTIVE FORM -->
+<section class="px-gutter-mobile py-space-2xl bg-surface-container-high rounded-t-3xl shadow-xl flex flex-col gap-space-md" id="executive-inquiry">
+<div class="flex flex-col gap-space-xxs text-center items-center">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center mb-1">
+<span class="material-symbols-outlined text-[24px]">mark_email_read</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold tracking-wider uppercase">Foundation Executive Office</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">재단 이사회 &amp; 참여 문의</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">
+        상세 사업타당성 보고서 및 현장 실사 브리핑을 원하시면 아래 양식을 접수해 주십시오.
+      </p>
+</div>
+<!-- Interactive Executive Lead Form -->
+<form class="flex flex-col gap-space-sm bg-surface-bright p-space-lg rounded-xl shadow-sm" id="proposal-form" onsubmit="handleFormSubmit(event)">
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="inquirer-name">소속 및 성함 / 직책</label>
+<input class="w-full h-11 px-space-sm bg-surface-container-lowest rounded text-on-surface font-body-sm text-body-sm focus:outline-none focus:bg-surface-container" id="inquirer-name" placeholder="예: 천도교 유지재단 이사 홍길동" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="inquirer-phone">연락처</label>
+<input class="w-full h-11 px-space-sm bg-surface-container-lowest rounded text-on-surface font-body-sm text-body-sm focus:outline-none focus:bg-surface-container" id="inquirer-phone" placeholder="010-0000-0000" required="" type="tel"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="inquirer-type">관심 참여 분야</label>
+<select class="w-full h-11 px-space-sm bg-surface-container-lowest rounded text-on-surface font-body-sm text-body-sm focus:outline-none focus:bg-surface-container" id="inquirer-type">
+<option value="board">재단 이사회 검토 및 현장 브리핑 신청</option>
+<option value="resident">공동체 마을 주거 및 조합원 입주 문의</option>
+<option value="agritech">스마트팜 시설 시공 및 농업 기술 제휴</option>
+<option value="commercial">온실 카페 / 로컬 마켓 입점 협력</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="inquirer-memo">문의 사항 및 전달 메시지</label>
+<textarea class="w-full p-space-sm bg-surface-container-lowest rounded text-on-surface font-body-sm text-body-sm focus:outline-none focus:bg-surface-container" id="inquirer-memo" placeholder="부지 현장 답사 일정 또는 자료 요청 사항을 기재해 주십시오." rows="3"></textarea>
+</div>
+<button class="mt-space-xs w-full min-h-[48px] py-space-sm px-space-lg rounded bg-primary text-on-primary font-label-lg text-label-lg font-semibold shadow-md active:scale-98 transition-all hover:bg-surface-tint flex items-center justify-center gap-1.5" type="submit">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>사업계획서 상세본 신청하기</span>
+</button>
+<div class="hidden mt-2 p-space-sm bg-surface-container-high rounded text-center font-label-sm text-label-sm text-primary font-semibold" id="submit-toast">
+        문의가 안전하게 접수되었습니다. 추진위원회가 24시간 내 연락드립니다.
+      </div>
+</form>
+<!-- Fast Hotline & Legal Footer -->
+<div class="flex flex-col items-center gap-space-sm pt-space-xs text-center">
+<a class="inline-flex items-center gap-2 px-space-md py-space-xs rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold shadow-sm active:opacity-80" href="tel:031-770-0000">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span>추진위원회 직통 전화상담</span>
+</a>
+<div class="flex flex-col text-on-surface-variant font-label-sm text-label-sm opacity-80 gap-0.5 mt-space-xs">
+<span>지상천국 스마트팜 공동체마을 추진위원회</span>
+<span>사업지: 경기도 양평군 여양2로 (구 궁을행복요양원 부지 일원)</span>
+<span class="mt-1">© 2026 Jisang Cheonguk Smart Farm Village. All rights reserved.</span>
+</div>
+</div>
+</section>
+</div>
+<script>
+  function switchTab(tabId) {
+    const tabs = ['living', 'corridor', 'hall'];
+    tabs.forEach(t => {
+      const panel = document.getElementById('tab-' + t);
+      const btn = document.getElementById('btn-' + t);
+      if (t === tabId) {
+        panel.classList.remove('hidden');
+        btn.classList.add('bg-surface-bright', 'text-primary', 'font-semibold', 'shadow-sm');
+        btn.classList.remove('text-on-surface-variant');
+      } else {
+        panel.classList.add('hidden');
+        btn.classList.remove('bg-surface-bright', 'text-primary', 'font-semibold', 'shadow-sm');
+        btn.classList.add('text-on-surface-variant');
+      }
+    });
+  }
+
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    const toast = document.getElementById('submit-toast');
+    toast.classList.remove('hidden');
+    event.target.reset();
+    setTimeout(() => {
+      toast.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-20 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] transition-colors text-primary font-semibold" data-path="overview" href="#"><span class="material-symbols-outlined text-[22px]">domain</span><span class="font-label-sm text-label-sm mt-0.5">비전개요</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] text-on-surface-variant transition-colors" data-path="master-plan" href="#"><span class="material-symbols-outlined text-[22px]">map</span><span class="font-label-sm text-label-sm mt-0.5">단지계획</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] text-on-surface-variant transition-colors" data-path="smart-telemetry" href="#"><span class="material-symbols-outlined text-[22px]">nest_eco_leaf</span><span class="font-label-sm text-label-sm mt-0.5">스마트농업</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] text-on-surface-variant transition-colors" data-path="endowment-ledger" href="#"><span class="material-symbols-outlined text-[22px]">account_balance</span><span class="font-label-sm text-label-sm mt-0.5">재단기금</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] text-on-surface-variant transition-colors" data-path="board-contact" href="#"><span class="material-symbols-outlined text-[22px]">support_agent</span><span class="font-label-sm text-label-sm mt-0.5">이사회문의</span></a></div></nav></body></html>
